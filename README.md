@@ -2,11 +2,11 @@
 
 Backend para la gestion de un gimnasio
 
-##Tecnologias
--Node.js
--Express
--MySQL
+## Tecnologias
+- Node.js
+- Express
+- MySQL
 
-#Setup
+## Setup
 npm install
 npm run dev
