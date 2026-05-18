@@ -4,6 +4,9 @@ const login = async (req, res) =>{
     try {
         const {user, password} = req.body;
 
+        if(!user || !password)
+            return res.status(400).json({error : "Missing required fields"});
+
         const result = await authService.login(user, password);
 
         if(!result){
@@ -22,7 +25,25 @@ const logout = async (req,res) =>{
 };
 
 const verifyToken = async (req, res) =>{
-    res.json({valid : true});
+    const authHeader = req.headers.authorization;
+    
+
+    if(!authHeader){
+        return res.status(401).json({authenticated : false});
+    }
+
+    const token = authHeader.split(" ")[1];
+
+    const decoded = await authService.verifyToken(token);
+
+    if(!decoded){
+        return res.status(401).json({authenticated : false});
+    }
+
+    return res.json({
+        authenticated : true,
+        user: decoded
+    });
 };
 
 module.exports = {
