@@ -41,7 +41,7 @@ npm install
 Crear el archivo '.env' en el directorio raiz.
 
 ```env
-JWT_SECRET=ClaveUltraMegaSecretisima 
+JWT_SECRET=YOUR_SECRET_KEY
 ```
 
 ---
@@ -81,7 +81,7 @@ npm test -- --runInBand --verbose
 | Método | Endpoint | Descripcion |
 |---|---|---|
 |POST | `/api/auth/login` | login de usuario |
-|GET | `/api/auth/verify` | verificar |
+|GET | `/api/auth/verify` | verificar JWT Token|
 |POST | `/api/auth/logout` | logout de usuario |
 
 ---
