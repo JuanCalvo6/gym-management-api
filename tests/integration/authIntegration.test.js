@@ -1,7 +1,8 @@
 require('dotenv').config();
+const pool = require('../../src/config/db');
 
 const request = require('supertest');
-const app = require('../src/app');
+const app = require('../../src/app');
 
 // npm test -- --runInBand --verbose
 
@@ -75,7 +76,6 @@ describe("GET /api/auth/verify", () =>{
         const verifyRes = await request(app)
             .get("/api/auth/verify")
             .set("Authorization", `Bearer ${token}`);
-        console.log(verifyRes);
 
         expect(verifyRes.statusCode).toBe(200);
         expect(verifyRes.body).toHaveProperty(
@@ -104,4 +104,8 @@ describe("GET /api/auth/verify", () =>{
             false
         );
     });
+});
+
+afterAll(async ()=>{
+    await pool.end();
 });

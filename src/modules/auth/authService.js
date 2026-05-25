@@ -5,16 +5,18 @@ const bcrypt = require("bcryptjs");
 const login = async(user, password) =>{
     const userFound = await authModel.findUser(user);
 
-    if(!userFound) return null;
+    if(!userFound) 
+        throw new Error('Invalid credentials');
 
 
     const isValidPassword = await bcrypt.compare(password, userFound.password);
 
-    if(!isValidPassword) return null;
+    if(!isValidPassword) 
+        throw new Error('Invalid credentials');
 
     const token = jwtUtils.generateToken(
         {
-            user : userFound.user,
+            id : userFound.id,
             type : userFound.type
         }
     );

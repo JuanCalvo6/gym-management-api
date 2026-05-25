@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const authController =require('./authController');
+const authController = require('./authController');
+const authValidation = require('./authValidation');
 
-router.post('/login', authController.login);
+router.post('/login', authValidation.validationLogin, authController.login);
 
 router.post('/logout',authController.logout);
 

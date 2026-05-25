@@ -4,18 +4,16 @@ const login = async (req, res) =>{
     try {
         const {user, password} = req.body;
 
-        if(!user || !password)
-            return res.status(400).json({error : "Missing required fields"});
-
         const result = await authService.login(user, password);
-
-        if(!result){
-            return res.status(401).json({error: "Invalid credentials"});
-        }
 
         res.json(result);
 
     } catch (error) {
+
+        if(error.message === 'Invalid credentials'){
+            return res.status(401).json({error : error.message});
+        }
+
         res.status(500).json({error: "Server error"});
     }
 };
