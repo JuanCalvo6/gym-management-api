@@ -9,13 +9,13 @@ REST API para la gestión de un gimnasio construido con Node.js y Express.
 - Password hashing con bcryptjs
 - Testing automatizado con Jest y Supertest
 - Arquitectura Modular
-
+- Conexión de DB MySQL
 ---
 
 ## Tecnologias
 - Node.js
 - Express
-- MySQL (proximamente)
+- MySQL (mysql2)
 - JWT
 - Bcryptjs
 - Jest
@@ -41,7 +41,14 @@ npm install
 Crear el archivo '.env' en el directorio raiz.
 
 ```env
-JWT_SECRET=YOUR_SECRET_KEY
+JWT_SECRET=YOUR_SECRET_KEY  
+PORT=
+
+DB_HOST=
+DB_PORT=
+DB_USER=
+DB_PASSWORD=
+DB_NAME=
 ```
 
 ---
@@ -64,6 +71,7 @@ npm install
 
 ## Ejecutar tests
 
+Ejecutar todos los tests:
 ```bash
 npm test
 ```
@@ -72,6 +80,18 @@ Verbose mode:
 
 ```bash
 npm test -- --runInBand --verbose
+```
+
+Ejecutar tests de integración:
+
+```bash
+npm test authIntegration.test.js
+```
+
+Ejecutar tests unitarios:
+
+```bash
+npm test authService.test.js
 ```
 
 ## API Endpoints
@@ -102,6 +122,9 @@ Authorization: Bearer YOUR_TOKER
 
 ```text
 src/
+├── config/
+│   └── db.js
+│
 ├── middlewares/
 │   └── authMiddleware.js
 │
@@ -110,7 +133,8 @@ src/
 │       ├── authController.js
 │       ├── authModel.js
 │       ├── authRouter.js
-│       └── authService.js
+│       ├── authService.js
+│       └── authValidation.js
 │
 ├── utils/
 │   └── jwtUtils.js
@@ -120,11 +144,34 @@ src/
 
 test/
 ```
+--- 
+
+## Configuración DB
+Importar el archivo SQL ubicado en:
+
+```text
+database/gimnasio.sql
+```
+--- 
+
+## Testing
+El proyecto incluye:
+- Tests de integración utilizando Supertest
+- Tests unitarios utilizando Jest mocks
+
+### Test de integración 
+Los tests de integración validan el flujo completo de la solicitud:
+```text
+Route → Controller → Service → Model → MySQL
+```
+### Test unitario
+Los tests unitarios aislan la lógica de negocio simulando dependencias externas, como los modelos de base de datos.
 
 --- 
 
 ## Futuras implementaciones
-- Integración de MySQL
-- DataBase mocking para tests
 - Uso de roles y permisos
-- Gestion de clientes
+- Módulo de profesores
+- Gestión de clientes
+- Gestión de inscripciones
+- Control de asistencias
