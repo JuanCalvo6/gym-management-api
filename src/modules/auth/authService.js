@@ -1,18 +1,19 @@
 const jwtUtils = require('../../utils/jwtUtils');
 const authModel = require('./authModel');
 const bcrypt = require("bcryptjs");
+const AppError = require('../../utils/AppError');
 
 const login = async(user, password) =>{
     const userFound = await authModel.findUser(user);
 
     if(!userFound) 
-        throw new Error('Invalid credentials');
+        throw new AppError('Invalid credentials', 401);
 
 
     const isValidPassword = await bcrypt.compare(password, userFound.password);
 
     if(!isValidPassword) 
-        throw new Error('Invalid credentials');
+        throw new AppError('Invalid credentials', 401);
 
     const token = jwtUtils.generateToken(
         {

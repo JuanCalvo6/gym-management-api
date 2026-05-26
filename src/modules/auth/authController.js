@@ -10,11 +10,7 @@ const login = async (req, res) =>{
 
     } catch (error) {
 
-        if(error.message === 'Invalid credentials'){
-            return res.status(401).json({error : error.message});
-        }
-
-        res.status(500).json({error: "Server error"});
+        res.status(error.statusCode || 500).json({error: error.message});
     }
 };
 
