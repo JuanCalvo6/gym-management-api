@@ -27,14 +27,13 @@ const createProfessor = async (professorData)=>{
     const result = await professorModel.createProfessor(newProfessor);
 
     return result;
-}
+};
 
 const getAllProfessors = async ()=>{
     const professors = await professorModel.getAllProfessors();
 
-    console.log(professors);
     return professors;
-}
+};
 
 const getProfessorById = async (id) =>{
     if(isNaN(id))
@@ -46,10 +45,29 @@ const getProfessorById = async (id) =>{
         throw new AppError('Professor not found', 404);
 
     return professor;
-}
+};
+
+const updateProfessor = async (id, professorData) =>{
+    await getProfessorById(id);
+    
+    const duplicatedProfessor = await professorModel.findProfessorByUniqueData(
+        professorData.user,
+        professorData.dni,
+        professorData.mail,
+        id
+    );
+
+    if(duplicatedProfessor)
+        throw new AppError('Professor data already exists', 409);
+
+    const result =await professorModel.updateProfessor(id, professorData);
+
+    return result;
+};
 
 module.exports = {
     createProfessor,
     getAllProfessors,
-    getProfessorById
+    getProfessorById,
+    updateProfessor
 }

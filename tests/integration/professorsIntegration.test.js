@@ -167,6 +167,47 @@ describe("GET /api/professors/:id", ()=>{
         const res = await request(app).get('/api/professors/abc');
 
         expect(res.statusCode).toBe(400);
+    });
+});
+
+describe("PUT /api/professors/:id", ()=>{
+    it('Should update professor successfully', async()=>{
+        const createRes = await request(app)
+            .post('/api/professors')
+            .send({
+                name: 'Juan',
+                surname: 'Perez',
+                dni: Date.now().toString(),
+                mail: `juan${Date.now()}@test.com`,
+                user: `juan${Date.now()}`,
+                password: '123456'
+            });
+
+        const professorId = createRes.body.id;
+
+        const res = await request(app)
+            .put(`/api/professors/${professorId}`)
+            .send({
+                name: 'Juan Updated',
+                surname: 'Perez',
+                dni : Date.now().toString(),
+                mail: `juan${Date.now()}Up@test.com`,
+                user: `juan${Date.now()}Up`,
+            });
+
+        expect(res.statusCode).toBe(200);       
+    });
+
+    it('Should fail if id is not a number', async()=>{
+        const res =  await request(app).put('/api/professors/abv').send({});
+
+        expect(res.statusCode).toBe(400);
+    })
+
+    it('Should fail if professor does not exist', async()=>{
+        const res =  await request(app).put('/api/professors/9999999').send({});
+
+        expect(res.statusCode).toBe(404);
     })
 });
 

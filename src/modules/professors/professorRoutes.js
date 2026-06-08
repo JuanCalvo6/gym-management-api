@@ -9,5 +9,7 @@ router.post('/',professorValidation.validateProfessor ,professorController.creat
 router.get('/',professorController.getAllProfessors);
 router.get('/:id', professorController.getProfessorById);
 
+router.put('/:id', professorController.updateProfessor);
+
 
 module.exports = router;

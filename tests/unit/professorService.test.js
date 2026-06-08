@@ -124,3 +124,76 @@ describe("GetprofessorById", ()=>{
         expect(professorModel.getProfessorById).not.toHaveBeenCalled();
     })
 });
+
+describe("updateProfessor", ()=>{
+    it('Should update professor successfully', async()=>{
+        professorModel.getProfessorById.mockResolvedValue({
+            id : 1
+        });
+
+        professorModel.findProfessorByUniqueData.mockResolvedValue(null);
+
+        professorModel.updateProfessor.mockResolvedValue({id: 1});
+
+        const result = await professorService.updateProfessor(
+            1,
+            {
+                name: "Juan",
+                surname: "Test",
+                dni:"37094226",
+                address: "Avenida Test 123",
+                phone: "3881234567",
+                mail: "juan231@test.com",
+                user: "juantest"
+            }
+        );
+
+        expect(result).toEqual({id: 1});
+        expect(professorModel.updateProfessor).toHaveBeenCalled();
+    });
+
+    it('Should fail if id is not a number', async()=>{
+        await expect(
+            professorService.updateProfessor(
+                'abc',
+                {}
+            )
+        ).rejects.toThrow('Invalid professor id');
+    });
+
+    it('Should fail if professor is not exist', async()=>{
+        professorModel.getProfessorById.mockResolvedValue(null);
+
+        await expect(
+            professorService.updateProfessor(
+                999,
+                {}
+            )
+        ).rejects.toThrow('Professor not found');
+    });
+
+    it('Should fail if unique data already exists', async()=>{
+        professorModel.getProfessorById.mockResolvedValue({
+            id : 1
+        });
+
+        professorModel.findProfessorByUniqueData.mockResolvedValue({
+            id : 2
+        });
+
+        await expect(
+            professorService.updateProfessor(
+                1,
+                {
+                    name: "Juan",
+                    surname: "Test",
+                    dni:"37094226",
+                    address: "Avenida Test 123",
+                    phone: "3881234567",
+                    mail: "juan231@test.com",
+                    user: "juantest"
+                }
+            )
+        ).rejects.toThrow('Professor data already exists');
+    })
+});
