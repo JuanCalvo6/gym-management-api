@@ -29,6 +29,13 @@ const createProfessor = async (professorData)=>{
     return result;
 }
 
+const getAllProfessors = async ()=>{
+    const professors = await professorModel.getAllProfessors();
+
+    return professors;
+}
+
 module.exports = {
-    createProfessor
+    createProfessor,
+    getAllProfessors
 }

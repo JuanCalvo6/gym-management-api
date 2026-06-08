@@ -2,9 +2,9 @@ const professorService = require('./professorService');
 
 const createProfessor = async (req, res) =>{
     try {
-        const result = await professorService.createProfessor(req.body);
+        const professors = await professorService.createProfessor(req.body);
         
-        res.status(201).json(result);
+        res.status(201).json(professors);
     
     } catch (error) {
 
@@ -12,6 +12,19 @@ const createProfessor = async (req, res) =>{
     }
 };
 
+const getAllProfessors = async (req,res) => {
+    try {
+        const result = await professorService.getAllProfessors();
+
+        res.status(200).json(result);
+        
+    } catch (error) {
+        res.status(error.statusCode || 500).json({error: error.message});
+    
+    }
+}
+
 module.exports = {
-    createProfessor
+    createProfessor,
+    getAllProfessors
 }

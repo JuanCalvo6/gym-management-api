@@ -109,6 +109,32 @@ describe("POST /api/professors/", ()=>{
     });
 });
 
+describe("GET /api/professors/", ()=>{
+    it('Should return all active professors', async() =>{
+
+        const res = await request(app).get('/api/professors/');
+
+        expect(res.statusCode).toBe(200);
+        expect(Array.isArray(res.body)).toBe(true);
+    });
+
+    it('Should not return password field', async()=>{
+        const res = await request(app).get('/api/professors/');
+
+        expect(res.statusCode).toBe(200);
+        
+        if(res.body.length > 0)
+            expect(res.body[0]).not.toHaveProperty('password');
+    });
+
+    it('Should return only active professors', async()=>{
+        const res = await request(app).get('/api/professors/');
+
+        expect(res.statusCode).toBe(200);
+        res.body.forEach(professor => expect(professor.estado).toBe('A'));
+    })
+})
+
 afterAll(async ()=>{
     await pool.end();
 });

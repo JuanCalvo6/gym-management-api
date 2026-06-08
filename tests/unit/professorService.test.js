@@ -69,3 +69,27 @@ describe("CreateProfessor", ()=>{
         })).rejects.toThrow('Email already exists');
     });
 });
+
+describe("GetAllProfessors", ()=>{
+    it('Should return all professors', async()=>{
+        const mockProfessors = [
+            {
+                id: 1,
+                nombres: 'Juan',
+                apellidos: 'Perez'
+            },
+            {
+                id: 2,
+                nombres: 'Maria',
+                apellidos: 'Castro'
+            }
+        ];
+
+        professorModel.getAllProfessors.mockResolvedValue(mockProfessors);
+
+        const result =  await professorModel.getAllProfessors();
+
+        expect(result).toEqual(mockProfessors);
+        expect(professorModel.getAllProfessors).toHaveBeenCalled();
+    })
+});

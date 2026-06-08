@@ -31,7 +31,19 @@ const createProfessor = async (professorData)=>{
     return {id: result.insertId};
 };
 
+const getAllProfessors = async()=>{
+    const [rows] = pool.query(
+        `SELECT idProfesor AS id, nombres, apellidos, dni, telefono, direccion, mail, usuario, estado
+         FROM Profesores
+         WHERE estado = 'A'
+         ORDER BY Estado, Apellidos, nombres`
+    );
+
+    return rows[0];
+}
+
 module.exports =  {
     findExistingProfessor,
-    createProfessor
+    createProfessor,
+    getAllProfessors
 }

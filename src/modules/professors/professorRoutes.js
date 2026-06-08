@@ -6,5 +6,7 @@ const router = express.Router();
 
 router.post('/',professorValidation.validateProfessor ,professorController.createProfessor);
 
+router.get('/',professorController.getAllProfessors);
+
 
 module.exports = router;
