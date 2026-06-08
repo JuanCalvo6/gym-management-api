@@ -35,7 +35,20 @@ const getAllProfessors = async ()=>{
     return professors;
 }
 
+const getProfessorById = async (id) =>{
+    if(isNaN(id))
+        throw new AppError('Invalid professor id', 400);
+
+    const professor = await professorModel.getProfessorById(id);
+
+    if(!professor)
+        throw new AppError('Professor not found', 404);
+
+    return professor;
+}
+
 module.exports = {
     createProfessor,
-    getAllProfessors
+    getAllProfessors,
+    getProfessorById
 }

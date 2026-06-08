@@ -7,6 +7,7 @@ const router = express.Router();
 router.post('/',professorValidation.validateProfessor ,professorController.createProfessor);
 
 router.get('/',professorController.getAllProfessors);
+router.get('/:id', professorController.getProfessorById);
 
 
 module.exports = router;

@@ -93,3 +93,30 @@ describe("GetAllProfessors", ()=>{
         expect(professorModel.getAllProfessors).toHaveBeenCalled();
     })
 });
+
+describe("GetprofessorById", ()=>{
+    it('Should return professor by id', async()=>{
+        const professor = {
+            id = 1,
+            nombres = 'Juan'
+        };
+
+        professorModel.getProfessorById.mockResolvedValue(professor);
+
+        const result = await professorService.getProfessorById(1);
+
+        expect(result).toEqual(professor);
+    });
+
+    it('Should fail if professor does not exist', async()=>{
+        professorModel.getProfessorById.mockResolvedValue(null);
+
+        await expect(professorService.getProfessorById(999)).rejects.toThrow('Professor not found');
+    });
+
+    it('Should fail if id is not a number', async()=>{
+        await expect(professorService.getProfessorById('abc')).rejects.toThrow('Invalid professor id');
+
+        expect(professorModel.getProfessorById).not.toHaveBeenCalled();
+    })
+});

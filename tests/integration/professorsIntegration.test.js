@@ -133,7 +133,42 @@ describe("GET /api/professors/", ()=>{
         expect(res.statusCode).toBe(200);
         res.body.forEach(professor => expect(professor.estado).toBe('A'));
     })
-})
+});
+
+decribe("GET /api/professors/:id", ()=>{
+    it('Should return professor by id', async()=>{
+        const createRes = await request(app)
+            .post('/api/professors')
+            .send({
+                nombres: 'Juan',
+                apellidos: 'Perez',
+                dni: Date.now().toString(),
+                mail: `juan${Date.now()}@test.com`,
+                usuario: `juan${Date.now()}`,
+                password: '123456'
+            });
+
+        const professorId = createRes.body.id;
+
+        const res = await request(app).get(`/api/professors/${professorId}`);
+
+        expect(res.statusCode).toBe(200);
+        expect(res.body).toHaveProperty('id');
+        expect(res.body.id).toBe(professorId);
+    });
+
+    it('Should fail if professor does not exist', async()=>{
+        const res = request(app).get('/api/professors/999999');
+
+        expect(res.statusCode).toBe(404);
+    });
+
+    it('Should fail if id is not a number', async()=>{
+        const res = request(app).get('/api/professors/abc');
+
+        expect(res.statusCode).toBe(400);
+    })
+});
 
 afterAll(async ()=>{
     await pool.end();

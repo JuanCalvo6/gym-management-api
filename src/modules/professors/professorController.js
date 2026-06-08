@@ -24,7 +24,21 @@ const getAllProfessors = async (req,res) => {
     }
 }
 
+const getProfessorById = async (req, res) =>{
+    try {
+        const {id} = req.params;
+
+        const professor = await professorService.getProfessorById(id);
+
+        res.status(200).json(professor);
+
+    } catch (error) {
+        res.status(error.statusCode || 500).json({error: error.message});
+    }
+}
+
 module.exports = {
     createProfessor,
-    getAllProfessors
+    getAllProfessors,
+    getProfessorById
 }

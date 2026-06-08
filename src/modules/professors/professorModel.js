@@ -42,8 +42,20 @@ const getAllProfessors = async()=>{
     return rows[0];
 }
 
+const getProfessorById = async (id) =>{
+    const [rows] = pool.query(
+        `SELECT idProfesor AS id, nombres, apellidos, dni, telefono, direccion, mail, usuario, estado
+        FROM Profesores
+        WHERE idProfesor = ?`,
+        [id]
+    );
+
+    return rows[0] || null;
+};
+
 module.exports =  {
     findExistingProfessor,
     createProfessor,
-    getAllProfessors
+    getAllProfessors,
+    getProfessorById
 }
