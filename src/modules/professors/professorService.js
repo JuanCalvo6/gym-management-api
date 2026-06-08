@@ -32,6 +32,7 @@ const createProfessor = async (professorData)=>{
 const getAllProfessors = async ()=>{
     const professors = await professorModel.getAllProfessors();
 
+    console.log(professors);
     return professors;
 }
 

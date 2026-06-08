@@ -32,18 +32,18 @@ const createProfessor = async (professorData)=>{
 };
 
 const getAllProfessors = async()=>{
-    const [rows] = pool.query(
+    const [rows] = await pool.query(
         `SELECT idProfesor AS id, nombres, apellidos, dni, telefono, direccion, mail, usuario, estado
          FROM Profesores
          WHERE estado = 'A'
          ORDER BY Estado, Apellidos, nombres`
     );
 
-    return rows[0];
+    return rows;
 }
 
 const getProfessorById = async (id) =>{
-    const [rows] = pool.query(
+    const [rows] = await pool.query(
         `SELECT idProfesor AS id, nombres, apellidos, dni, telefono, direccion, mail, usuario, estado
         FROM Profesores
         WHERE idProfesor = ?`,

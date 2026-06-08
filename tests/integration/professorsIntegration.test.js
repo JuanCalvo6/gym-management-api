@@ -131,25 +131,25 @@ describe("GET /api/professors/", ()=>{
         const res = await request(app).get('/api/professors/');
 
         expect(res.statusCode).toBe(200);
-        res.body.forEach(professor => expect(professor.estado).toBe('A'));
+        res.body.forEach(professor => expect(professor.estado).toBe('a'));
     })
 });
 
-decribe("GET /api/professors/:id", ()=>{
+describe("GET /api/professors/:id", ()=>{
     it('Should return professor by id', async()=>{
         const createRes = await request(app)
             .post('/api/professors')
             .send({
-                nombres: 'Juan',
-                apellidos: 'Perez',
+                name: 'Juan',
+                surname: 'Perez',
                 dni: Date.now().toString(),
                 mail: `juan${Date.now()}@test.com`,
-                usuario: `juan${Date.now()}`,
+                user: `juan${Date.now()}`,
                 password: '123456'
             });
 
         const professorId = createRes.body.id;
-
+        console.log(createRes.body);
         const res = await request(app).get(`/api/professors/${professorId}`);
 
         expect(res.statusCode).toBe(200);
@@ -158,13 +158,13 @@ decribe("GET /api/professors/:id", ()=>{
     });
 
     it('Should fail if professor does not exist', async()=>{
-        const res = request(app).get('/api/professors/999999');
+        const res = await request(app).get('/api/professors/999999');
 
         expect(res.statusCode).toBe(404);
     });
 
     it('Should fail if id is not a number', async()=>{
-        const res = request(app).get('/api/professors/abc');
+        const res = await request(app).get('/api/professors/abc');
 
         expect(res.statusCode).toBe(400);
     })

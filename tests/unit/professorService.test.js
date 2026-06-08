@@ -5,6 +5,10 @@ const bcrypt = require('bcryptjs');
 jest.mock('../../src/modules/professors/professorModel');
 jest.mock('bcryptjs');
 
+beforeEach(() => {
+    jest.clearAllMocks();
+});
+
 describe("CreateProfessor", ()=>{
     it('Should create a professor successfully', async()=>{
         const professor = {
@@ -97,8 +101,8 @@ describe("GetAllProfessors", ()=>{
 describe("GetprofessorById", ()=>{
     it('Should return professor by id', async()=>{
         const professor = {
-            id = 1,
-            nombres = 'Juan'
+            id : 1,
+            nombres : 'Juan'
         };
 
         professorModel.getProfessorById.mockResolvedValue(professor);
