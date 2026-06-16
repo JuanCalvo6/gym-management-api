@@ -50,9 +50,52 @@ const updateProfessor = async(req, res) =>{
     }
 };
 
+const deactivateProfessor = async(req, res) =>{
+    try {
+        const {id} = req.params
+
+        const result = await professorService.deactivateProfessor(id);
+
+        res.status(200).json(result)
+        
+    } catch (error) {
+        res.status(error.statusCode || 500).json({error: error.message})
+    }
+};
+
+const activateProfessor = async(req, res) =>{
+    try {
+        const {id} = req.params;
+
+        const result = await professorService.activateProfessor(id);
+
+        res.status(200).json(result);
+        
+    } catch (error) {
+        res.status(error.statusCode || 500).json({error: error.message});
+    }
+};
+
+const updateProfessorPassword = async(req, res) =>{
+    try {
+        const {id} = req.params;
+        const {password} = req.body;
+
+        const result = await professorService.updateProfessorPassword(id, password);
+
+        res.status(200).json(result);
+
+    } catch (error) {
+        res.status(error.statusCode || 500).json({error: error.message});
+    }
+}
+
 module.exports = {
     createProfessor,
     getAllProfessors,
     getProfessorById,
-    updateProfessor
+    updateProfessor,
+    deactivateProfessor,
+    activateProfessor,
+    updateProfessorPassword
 }

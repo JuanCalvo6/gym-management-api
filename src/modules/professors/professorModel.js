@@ -36,7 +36,7 @@ const createProfessor = async (professorData)=>{
             professorData.mail,
             professorData.user,
             professorData.password,
-            'a'
+            'A'
          ]
     );
 
@@ -92,11 +92,31 @@ const updateProfessor = async (id, professorData) =>{
     return {id: id};
 };
 
+const updateProfessorStatus = async(id, status) =>{
+    await pool.query(
+        `UPDATE Profesores
+         SET estado = ?
+         WHERE idProfesor = ?`,
+        [status, id]
+    );
+};
+
+const updateProfessorPassword = async(id, password) =>{
+    await pool.query(
+        `UPDATE Profesores
+         SET contraseña = ?
+         WHERE idProfesor = ?`,
+         [password, id]
+    );
+}
+
 module.exports =  {
     findExistingProfessor,
     findProfessorByUniqueData,
     createProfessor,
     getAllProfessors,
     getProfessorById,
-    updateProfessor
+    updateProfessor,
+    updateProfessorStatus,
+    updateProfessorPassword
 }

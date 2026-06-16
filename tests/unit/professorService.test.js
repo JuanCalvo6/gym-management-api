@@ -9,7 +9,7 @@ beforeEach(() => {
     jest.clearAllMocks();
 });
 
-describe("CreateProfessor", ()=>{
+describe("createProfessor", ()=>{
     it('Should create a professor successfully', async()=>{
         const professor = {
             name: "Juan",
@@ -74,7 +74,7 @@ describe("CreateProfessor", ()=>{
     });
 });
 
-describe("GetAllProfessors", ()=>{
+describe("getAllProfessors", ()=>{
     it('Should return all professors', async()=>{
         const mockProfessors = [
             {
@@ -98,7 +98,7 @@ describe("GetAllProfessors", ()=>{
     })
 });
 
-describe("GetprofessorById", ()=>{
+describe("getprofessorById", ()=>{
     it('Should return professor by id', async()=>{
         const professor = {
             id : 1,
@@ -196,4 +196,76 @@ describe("updateProfessor", ()=>{
             )
         ).rejects.toThrow('Professor data already exists');
     })
+});
+
+describe("deactivateProfessor", ()=>{
+    it('Should deactivate professor', async()=>{
+        professorModel.getProfessorById.mockResolvedValue({id : 1});
+
+        professorModel.updateProfessorStatus.mockResolvedValue();
+
+        const result = await professorService.deactivateProfessor(1);
+
+        expect(result).toEqual({
+            message : 'Professor deactivated successfully'
+        });
+    });
+
+    it('Should fail if professor is already deactivate', async()=>{
+        professorModel.getProfessorById.mockResolvedValue({
+            id : 1,
+            estado : 'B'
+        });
+
+        await expect(professorService.deactivateProfessor(1))
+            .rejects.toThrow('Professor is already inactive');
+    })
+
+    it('Should fail if id is not a number', async()=>{
+        await expect(professorService.deactivateProfessor('abc'))
+            .rejects.toThrow('Invalid professor id');
+    });
+
+    it('Should fail if professor does not exist', async()=>{
+        professorModel.getProfessorById.mockResolvedValue(null);
+
+        await expect(professorService.deactivateProfessor(9999))
+            .rejects.toThrow('Professor not found');
+    });
+});
+
+describe("activateProfessor", ()=>{
+    it('Should activate professor', async()=>{
+        professorModel.getProfessorById.mockResolvedValue({id : 1});
+
+        professorModel.updateProfessorStatus.mockResolvedValue();
+
+        const result = await professorService.activateProfessor(1);
+
+        expect(result).toEqual({
+            message : 'Professor activated successfully'
+        });
+    });
+
+    it('Should fail if professor is already activate', async()=>{
+        professorModel.getProfessorById.mockResolvedValue({
+            id : 1,
+            estado : 'A'
+        });
+
+        await expect(professorService.activateProfessor(1))
+            .rejects.toThrow('Professor is already active');
+    })
+
+    it('Should fail if id is not a number', async()=>{
+        await expect(professorService.activateProfessor('abc'))
+            .rejects.toThrow('Invalid professor id');
+    });
+
+    it('Should fail if professor does not exist', async()=>{
+        professorModel.getProfessorById.mockResolvedValue(null);
+
+        await expect(professorService.activateProfessor(9999))
+            .rejects.toThrow('Professor not found');
+    });
 });

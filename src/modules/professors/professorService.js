@@ -65,9 +65,42 @@ const updateProfessor = async (id, professorData) =>{
     return result;
 };
 
+const deactivateProfessor = async(id) =>{
+    const professor = await getProfessorById(id);
+
+    if(professor.estado === 'B')
+        throw new AppError('Professor is already inactive', 409);
+
+    await professorModel.updateProfessorStatus(id, 'B');
+
+    return {message: 'Professor deactivated successfully'};
+};
+
+const activateProfessor = async(id) =>{
+    const professor = await getProfessorById(id);
+
+    if(professor.estado === 'A')
+        throw new AppError('Professor is already active', 409);
+
+    await professorModel.updateProfessorStatus(id, 'A');
+
+    return {message: 'Professor activated successfully'};
+};
+
+const updateProfessorPassword = async(id, password) =>{
+    await getProfessorById(id);
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await professorModel.updateProfessorPassword(id, hashedPassword);
+
+    return {message: 'Password update successfully'};
+};
 module.exports = {
     createProfessor,
     getAllProfessors,
     getProfessorById,
-    updateProfessor
+    updateProfessor,
+    deactivateProfessor,
+    activateProfessor
 }

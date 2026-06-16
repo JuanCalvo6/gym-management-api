@@ -131,7 +131,7 @@ describe("GET /api/professors/", ()=>{
         const res = await request(app).get('/api/professors/');
 
         expect(res.statusCode).toBe(200);
-        res.body.forEach(professor => expect(professor.estado).toBe('a'));
+        res.body.forEach(professor => expect(professor.estado).toBe('A'));
     })
 });
 
@@ -209,6 +209,58 @@ describe("PUT /api/professors/:id", ()=>{
 
         expect(res.statusCode).toBe(404);
     })
+});
+
+describe("PATCH /api/professors/:id/deactivate", ()=>{
+    it('Should deactivate professor', async()=>{
+        const res = await request(app).patch('/api/professors/28/deactivate');
+
+        expect(res.statusCode).toBe(200);
+    });
+
+    it('Should fail if professor is already deactivate', async()=>{
+        const res = await request(app).patch('/api/professors/28/deactivate');
+
+        expect(res.statusCode).toBe(409);
+    });
+
+    it('Should fail if id is not a number', async()=>{
+        const res = await request(app).patch('/api/professors/abc/deactivate');
+        
+        expect(res.statusCode).toBe(400);
+    });
+
+    it('Should fail if professor does not exist', async()=>{
+        const res = await request(app).patch('/api/professors/999/deactivate');
+
+        expect(res.statusCode).toBe(404);
+    });
+});
+
+describe("PATCH /api/professors/:id/activate", ()=>{
+    it('Should activate professor', async()=>{
+        const res = await request(app).patch('/api/professors/27/activate');
+
+        expect(res.statusCode).toBe(200);
+    });
+
+    it('Should fail if professor is already activate', async()=>{
+        const res = await request(app).patch('/api/professors/27/activate');
+
+        expect(res.statusCode).toBe(409);
+    });
+
+    it('Should fail if id is not a number', async()=>{
+        const res = await request(app).patch('/api/professors/abc/activate');
+        
+        expect(res.statusCode).toBe(400);
+    });
+
+    it('Should fail if professor does not exist', async()=>{
+        const res = await request(app).patch('/api/professors/999/activate');
+
+        expect(res.statusCode).toBe(404);
+    });
 });
 
 afterAll(async ()=>{
