@@ -263,6 +263,51 @@ describe("PATCH /api/professors/:id/activate", ()=>{
     });
 });
 
+describe.only("PATCH /api/professors/:id/password", ()=>{
+    it('Should update password successfully', async()=>{
+        const res = await request(app).patch('/api/professors/27/password')
+            .send({password : '123456'});
+
+        expect(res.statusCode).toBe(200);
+    });
+
+    it('Should fail if id is not a number', async()=>{
+        const res = await request(app).patch('/api/professors/abc/password')
+            .send({password : '123456'});
+        
+        expect(res.statusCode).toBe(400);
+    });
+
+    it('Should fail if professor does not exist', async()=>{
+        const res = await request(app).patch('/api/professors/9999/password')
+            .send({password : '123456'});
+
+        expect(res.statusCode).toBe(404);
+    });
+
+    it('Should fail if password is missing', async()=>{
+        const res = await request(app).patch('/api/professors/26/password')
+            .send({});
+
+        expect(res.statusCode).toBe(400);
+    });
+
+    it('Should fail if password is too short', async()=>{
+        const res = await request(app).patch('/api/professors/26/password')
+            .send({password: '123'});
+
+        expect(res.statusCode).toBe(400);
+    });
+
+    it('Should fail if password is too long', async()=>{
+        const res = await request(app).patch('/api/professors/26/password')
+            .send({password: '1234567890123456789012345678901234567890123456789012345678901234'});
+
+        expect(res.statusCode).toBe(400);
+    });
+
+});
+
 afterAll(async ()=>{
     await pool.end();
 });

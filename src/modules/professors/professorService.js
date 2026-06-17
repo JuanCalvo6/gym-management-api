@@ -102,5 +102,6 @@ module.exports = {
     getProfessorById,
     updateProfessor,
     deactivateProfessor,
-    activateProfessor
+    activateProfessor,
+    updateProfessorPassword
 }

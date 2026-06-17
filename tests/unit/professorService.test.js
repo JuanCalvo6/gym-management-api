@@ -269,3 +269,44 @@ describe("activateProfessor", ()=>{
             .rejects.toThrow('Professor not found');
     });
 });
+
+describe("updateProfessorPassword", ()=>{
+    it('Should update password successfully', async()=>{
+        professorModel.getProfessorById.mockResolvedValue({id: 1});
+        bcrypt.hash.mockResolvedValue('hashedpassword');
+        professorModel.updateProfessorPassword.mockResolvedValue();
+
+        const result = await professorService.updateProfessorPassword(1, '123456');
+
+        expect(result).toEqual({message: 'Password update successfully'});
+        
+        expect(bcrypt.hash).toHaveBeenCalledWith('123456', 10);
+
+        expect(professorModel.updateProfessorPassword).toHaveBeenCalledWith(
+            1,
+            'hashedpassword'
+        );
+    });
+
+    it('Should fail if id is not a number', async()=>{
+        
+        await expect(professorService.updateProfessorPassword('abc', '123456'))
+            .rejects.toThrow('Invalid professor id');
+    });
+
+    it('Should fail if professor does not exist', async()=>{
+        professorModel.getProfessorById.mockResolvedValue(null);
+
+        await expect(professorService.updateProfessorPassword(999, '123456'))
+            .rejects.toThrow('Professor not found');
+    });
+
+    it('Should not hash password if professor does not exist', async()=>{
+        professorModel.getProfessorById.mockResolvedValue(null);
+
+        await expect(professorService.updateProfessorPassword(999, '123456'))
+            .rejects.toThrow('Professor not found');
+        
+        expect(bcrypt.hash).not.toHaveBeenCalled();
+    });
+});
