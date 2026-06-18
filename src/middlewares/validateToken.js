@@ -1,6 +1,6 @@
 const jwtUtils = require('../utils/jwtUtils');
 
-const authMiddleware = (req, res, next) =>{
+const validateToken = (req, res, next) =>{
     const authHeader = req.headers.authorization;
 
     if(!authHeader)
@@ -19,4 +19,4 @@ const authMiddleware = (req, res, next) =>{
     }
 };
 
-module.exports = {authMiddleware}
+module.exports = {validateToken}
