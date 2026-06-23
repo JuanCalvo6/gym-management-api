@@ -64,7 +64,7 @@ npm run dev
 Modo producción:
 
 ```bash
-npm install
+npm run start
 ```
 
 ---
@@ -105,6 +105,19 @@ npm test authService.test.js
 |POST | `/api/auth/logout` | logout de usuario |
 
 ---
+### Professors 
+
+| Método | Endpoint | Descripcion |
+|---|---|---|
+|POST | `/api/professors` | Crear un profesor|
+|GET | `/api/professors` | Obtener todos los profesores|
+|GET | `/api/professors/:id` | Obtener un profesor por el id|
+|PUT | `/api/professors/:id` | Modificar un profesor|
+|PATCH | `/api/professors/:id/deactivate` | Cambiar el estado de un profesor (B)|
+|PATCH | `/api/professors/:id/activate` | Cambiar el estado de un profesor (A)|
+|PATCH | `/api/professors/:id/password` |Cambiar el password de un profesor|
+
+---
 
 ## Autenticación
 
@@ -115,6 +128,19 @@ Ejemplo de header:
 ```http
 Authorization: Bearer YOUR_TOKER
 ```
+
+---
+
+## Profesores
+
+Rutas protegidas utilizando autenticación con JWT.
+
+Validación de roles para determinadas acciones. Solo un administrador puede:
+- Crear un profesor.
+- Listar todos los profesores.
+- Actualizar un profesor.
+- Cambiar el estado de un profesor.
+- Cambiar la contraseña de un profesor.
 
 ---
 
@@ -129,14 +155,22 @@ src/
 │   └── authMiddleware.js
 │
 ├── modules/
-│   └── auth/
-│       ├── authController.js
-│       ├── authModel.js
-│       ├── authRouter.js
-│       ├── authService.js
-│       └── authValidation.js
+│   ├── auth/
+│   │   ├── authController.js
+│   │   ├── authModel.js
+│   │   ├── authRouter.js
+│   │   ├── authService.js
+│   │   └── authValidation.js
+│   └── professors/
+│       ├── passwordValidation.js
+│       ├── professorController.js
+│       ├── professorModel.js
+│       ├── professorRoutes.js
+│       ├── professorService.js
+│       └── professorValidation.js
 │
 ├── utils/
+│   ├── AppError.js
 │   └── jwtUtils.js
 │
 ├── app.js
@@ -170,8 +204,7 @@ Los tests unitarios aislan la lógica de negocio simulando dependencias externas
 --- 
 
 ## Futuras implementaciones
-- Uso de roles y permisos
-- Módulo de profesores
+- Gestión de pases (Membresias)
 - Gestión de clientes
 - Gestión de inscripciones
 - Control de asistencias
