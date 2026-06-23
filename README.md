@@ -128,6 +128,21 @@ Ejemplo de header:
 ```http
 Authorization: Bearer YOUR_TOKER
 ```
+### Login
+POST /api/auth/ login
+
+Request : 
+{
+    "user" : "admin",
+    "password" : "password"
+}
+
+Response:
+{
+    "id" : 1,
+    "type" : "admin",
+    "token" : "..."
+}
 
 ---
 
@@ -201,7 +216,20 @@ Route → Controller → Service → Model → MySQL
 ### Test unitario
 Los tests unitarios aislan la lógica de negocio simulando dependencias externas, como los modelos de base de datos.
 
---- 
+---
+ 
+## Manejo de errores
+Los errores esperados usan AppError.
+
+Ejemplos:
+- 400 Bad Request
+- 401 Unauthorized
+- 403 Forbidden
+- 404 Not Found
+- 409 Conflict
+- 500 Internal Server Error
+
+---
 
 ## Futuras implementaciones
 - Gestión de pases (Membresias)
