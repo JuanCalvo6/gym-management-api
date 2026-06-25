@@ -14,9 +14,9 @@ const createProfessor = async (req, res) =>{
 
 const getAllProfessors = async (req,res) => {
     try {
-        const result = await professorService.getAllProfessors();
+        const professors = await professorService.getAllProfessors();
 
-        res.status(200).json(result);
+        res.status(200).json(professors);
         
     } catch (error) {
         res.status(error.statusCode || 500).json({error: error.message});
@@ -54,9 +54,9 @@ const deactivateProfessor = async(req, res) =>{
     try {
         const {id} = req.params
 
-        const result = await professorService.deactivateProfessor(id);
+        const professor = await professorService.deactivateProfessor(id);
 
-        res.status(200).json(result)
+        res.status(200).json(professor)
         
     } catch (error) {
         res.status(error.statusCode || 500).json({error: error.message})

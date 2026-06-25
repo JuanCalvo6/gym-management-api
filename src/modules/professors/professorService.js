@@ -60,9 +60,9 @@ const updateProfessor = async (id, professorData) =>{
     if(duplicatedProfessor)
         throw new AppError('Professor data already exists', 409);
 
-    const result =await professorModel.updateProfessor(id, professorData);
+    const professor =await professorModel.updateProfessor(id, professorData);
 
-    return result;
+    return professor;
 };
 
 const deactivateProfessor = async(id) =>{
