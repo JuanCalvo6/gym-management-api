@@ -2,9 +2,9 @@ const professorService = require('./professorService');
 
 const createProfessor = async (req, res) =>{
     try {
-        const professors = await professorService.createProfessor(req.body);
+        const professor = await professorService.createProfessor(req.body);
         
-        res.status(201).json(professors);
+        res.status(201).json(professor);
     
     } catch (error) {
 
