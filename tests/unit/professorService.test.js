@@ -91,7 +91,7 @@ describe("getAllProfessors", ()=>{
 
         professorModel.getAllProfessors.mockResolvedValue(mockProfessors);
 
-        const result =  await professorModel.getAllProfessors();
+        const result =  await professorService.getAllProfessors();
 
         expect(result).toEqual(mockProfessors);
         expect(professorModel.getAllProfessors).toHaveBeenCalled();

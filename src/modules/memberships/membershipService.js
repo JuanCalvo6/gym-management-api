@@ -71,5 +71,6 @@ module.exports = {
     getAllMemberships,
     getMembershipById,
     updateMembership,
-    deactivateMembership
+    deactivateMembership,
+    activateMembership
 }
