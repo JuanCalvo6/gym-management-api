@@ -149,7 +149,7 @@ describe("GET /api/professors/:id", ()=>{
             });
 
         const professorId = createRes.body.id;
-        console.log(createRes.body);
+        
         const res = await request(app).get(`/api/professors/${professorId}`);
 
         expect(res.statusCode).toBe(200);
@@ -263,7 +263,7 @@ describe("PATCH /api/professors/:id/activate", ()=>{
     });
 });
 
-describe.only("PATCH /api/professors/:id/password", ()=>{
+describe("PATCH /api/professors/:id/password", ()=>{
     it('Should update password successfully', async()=>{
         const res = await request(app).patch('/api/professors/27/password')
             .send({password : '123456'});

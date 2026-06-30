@@ -87,7 +87,7 @@ const updateMembershipStatus = async(id, status)=>{
     await pool.query(
         `UPDATE Pases
          SET estado = ?
-         WEHRE idPase = ?`,
+         WHERE idPase = ?`,
          [status, id]
     );
 };
