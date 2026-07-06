@@ -1,20 +1,19 @@
 const AppError = require('../../utils/AppError');
 
-const validateProfessor =  (req,res,next) =>{
+const validateClient = (req, res, next) =>{
     const {
         name,
         surname,
+        documentType,
         dni,
         phone,
         address,
-        mail,
-        user,
-        password
+        mail
     } = req.body;
 
     try {
-        // Required fields
-        if(!name || !surname || !dni || !user || !password)
+        //required fields
+        if(!name || !surname || !typeDni || !dni)
             throw new AppError('Missing required fields', 400);
 
         //name
@@ -23,6 +22,10 @@ const validateProfessor =  (req,res,next) =>{
         //surname
         if(surname.length > 30)
             throw new AppError('Surname cannot exceed 30 characters', 400);
+        //documentType
+        const validDocumentType = ['DNI', 'PASSPORT '];
+        if(!validDocumentType.includes(documentType))
+            throw new AppError('Invalid document type', 400);
         //dni
         if(dni.length > 20)
             throw new AppError('DNI cannot exceed 20 characters', 400);
@@ -44,23 +47,12 @@ const validateProfessor =  (req,res,next) =>{
             if(mail.length > 30)
                 throw new AppError('Email cannot exceed 30 characters', 400);
         }
-        //user
-        if(user.length < 4)
-            throw new AppError('User must have at least 4 characters', 400);
-        if(user.length > 30)
-            throw new AppError('User cannot exceed 30 characters', 400);
-        //password
-        if(password.length < 6)
-            throw new AppError('Password must have at least 6 characters', 400);
-        if(password.length > 60)
-            throw new AppError('Password cannot exceed 60 characters', 400);
 
         next();
-
-
+        
     } catch (error) {
-        res.status(error.statusCode || 500).json({error: error.message});
+        res.status(error.statusCode || 500).json({error : error.message});
     }
 };
 
-module.exports = {validateProfessor};
+module.exports = {validateClient};

@@ -52,14 +52,14 @@ const updateProfessor = async(req, res) =>{
 
 const deactivateProfessor = async(req, res) =>{
     try {
-        const {id} = req.params
+        const {id} = req.params;
 
         const professor = await professorService.deactivateProfessor(id);
 
         res.status(200).json(professor)
         
     } catch (error) {
-        res.status(error.statusCode || 500).json({error: error.message})
+        res.status(error.statusCode || 500).json({error: error.message});
     }
 };
 

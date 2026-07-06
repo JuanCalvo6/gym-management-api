@@ -48,7 +48,7 @@ const getAllProfessors = async()=>{
         `SELECT idProfesor AS id, nombres, apellidos, dni, telefono, direccion, mail, usuario, estado
          FROM Profesores
          WHERE estado = 'A'
-         ORDER BY Estado, Apellidos, nombres`
+         ORDER BY estado, apellidos, nombres`
     );
 
     return rows;
