@@ -12,7 +12,7 @@ const  findExistingClient =  async(dni) =>{
 }; 
 
 const findClientByUniqueData = async(id, dni) =>{
-    const [rows] = pool.query(
+    const [rows] = await pool.query(
         `SELECT 1
          FROM Clientes
          WHERE dni = ? AND idCliente <> ?
@@ -24,7 +24,7 @@ const findClientByUniqueData = async(id, dni) =>{
 };
 
 const createClient = async (clientData) =>{
-    const [result] = pool.query(
+    const [result] = await pool.query(
         `INSERT INTO Clientes (nombres, apellidos, tipoDni, dni, telefono, direccion, mail, estado)
          VALUES( ?, ?, ?, ?, ?, ?, ?, ?)`,
          [
@@ -105,6 +105,7 @@ module.exports = {
     findClientByUniqueData,
     createClient,
     getAllClients,
+    getClientById,
     updateClient,
     updateClientStatus
 };

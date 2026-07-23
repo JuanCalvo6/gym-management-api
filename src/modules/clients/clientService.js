@@ -20,7 +20,7 @@ const getAllClients = async()=>{
 };
 
 const getClientById = async(id)=>{
-    if(NaN(id))
+    if(isNaN(id))
         throw new AppError('Invalid client id', 400);
 
     const client = await clientModel.getClientById(id);

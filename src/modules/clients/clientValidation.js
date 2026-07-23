@@ -13,7 +13,7 @@ const validateClient = (req, res, next) =>{
 
     try {
         //required fields
-        if(!name || !surname || !typeDni || !dni)
+        if(!name || !surname || !documentType || !dni)
             throw new AppError('Missing required fields', 400);
 
         //name

@@ -14,7 +14,7 @@ const createMembershipTest = async(token)=>{
             price : 12000
         });
 
-        return res.body;
+    return res.body;
 };
 
 const deleteMembershipTest = async(id) =>{
