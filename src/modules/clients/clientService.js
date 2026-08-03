@@ -48,7 +48,7 @@ const deactivateClient = async(id) =>{
     const client = await getClientById(id);
 
     if( client.estado === 'B')
-            throw new AppError('Client is already inactive', 409);
+        throw new AppError('Client is already inactive', 409);
 
     await clientModel.updateClientStatus(id, 'B');
 
