@@ -1,4 +1,3 @@
-const { end } = require('../../src/config/db');
 const membershipModel = require('../../src/modules/memberships/membershipModel');
 const membershipService = require('../../src/modules/memberships/membershipService');
 

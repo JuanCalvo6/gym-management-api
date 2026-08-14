@@ -6,14 +6,10 @@ const membershipService = require('../memberships/membershipService')
 const createEnrollment = async (clientId, professorId, enrollmentData)=>{
 
     const existingClient = await clientService.getClientById(clientId);
-    if(!existingClient)
-        throw new AppError('Client not found', 404);
     if(existingClient.estado === 'B')
         throw new AppError('Client is inactive', 409)
 
     const existingMembership = await membershipService.getMembershipById(enrollmentData.membershipId);
-    if(!existingMembership)
-        throw new AppError('Membership not found', 404);
     if(existingMembership.estado === 'B')
         throw new AppError('Membership is inactive', 409);
 
@@ -24,8 +20,8 @@ const createEnrollment = async (clientId, professorId, enrollmentData)=>{
         const newEnd = new Date(enrollmentData.endDate);
 
         const overlap = existingEnrollments.some(enrollment =>{
-            const start = new Date(enrollment.startDate);
-            const end = new Date(enrollment.endDate);
+            const start = new Date(enrollment.diaInicio);
+            const end = new Date(enrollment.diaFin);
 
             return newStart <= end
         });
