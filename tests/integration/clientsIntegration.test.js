@@ -98,7 +98,7 @@ describe("GET /api/clients", ()=>{
 });
 
 describe("GET /api/clients/:id", ()=>{
-    it('Should return clients by id', async()=>{
+    it('Should return client by id', async()=>{
         const token = await getToken(
             process.env.USER_PROFESSOR_TEST,
             process.env.PASSWORD_PROFESSOR_TEST

@@ -14,7 +14,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/professors', validateToken.validateToken, professorRoutes);
 app.use('/api/memberships', validateToken.validateToken, membershipRoutes);
 app.use('/api/clients', validateToken.validateToken, clientRoutes);
-app.use('/apoi/enrollments', validateToken.validateToken, enrollmentRoutes);
+app.use('/api/enrollments', validateToken.validateToken, enrollmentRoutes);
 
 //Test Route
 app.get("/api/health", (req,res)=>{
