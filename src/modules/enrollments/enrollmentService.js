@@ -7,7 +7,7 @@ const createEnrollment = async (clientId, professorId, enrollmentData)=>{
 
     const existingClient = await clientService.getClientById(clientId);
     if(existingClient.estado === 'B')
-        throw new AppError('Client is inactive', 409)
+        throw new AppError('Client is inactive', 409);
 
     const existingMembership = await membershipService.getMembershipById(enrollmentData.membershipId);
     if(existingMembership.estado === 'B')
@@ -61,6 +61,21 @@ const getEnrollmentsByClient = async(idClient)=>{
     return enrollments;
 };
 
+const getCurrentEnrollmentByClient = async(idClient)=>{
+    await clientService.getClientById(idClient);
+
+    const enrollments = await enrollmentModel.getActiveEnrollmentsByClient(idClient);
+    
+    const today = new Date();
+
+    return enrollments.find(enrollment =>{
+        const start = new Date(enrollment.diaInicio);
+        const end = new Date(enrollment.diaFin);
+
+        return today >= start && today <= end;
+    }) || null;
+};
+
 const deactivateEnrollment = async(id) =>{
     const enrollment = await getEnrollmentById(id);
 
@@ -88,6 +103,7 @@ module.exports ={
     getAllEnrollments,
     getEnrollmentById,
     getEnrollmentsByClient,
+    getCurrentEnrollmentByClient,
     deactivateEnrollment,
     activateEnrollment
 }

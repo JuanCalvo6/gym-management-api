@@ -1,6 +1,7 @@
 const express = require('express');
 const clientController = require('./clientController');
 const enrollmentController = require('../enrollments/enrollmentController');
+const attendanceController = require('../attendances/attendanceController');
 const validateRole = require('../../middlewares/validateRole');
 const validateClient = require('./clientValidation');
 const validateEnrollment = require('../enrollments/enrollmentValidation');
@@ -10,10 +11,12 @@ const router = express.Router();
 
 router.post('/', validateRole.validateRole('professor'), validateClient.validateClient, clientController.createClient);
 router.post('/:id/enrollments', validateRole.validateRole('professor'), validateEnrollment.validateEnrollment, enrollmentController.createEnrollment);
+router.post('/:id/attendances', validateRole.validateRole('professor'), attendanceController.createAttendance);
 
 router.get('/', validateRole.validateRole('professor'), clientController.getAllClients);
 router.get('/:id', validateRole.validateRole('professor'), clientController.getClientById);
 router.get('/:id/enrollments', validateRole.validateRole('professor'), enrollmentController.getEnrollmentsByClient);
+router.get('/:id/attendances', validateRole.validateRole('professor'), attendanceController.getAttendancesByClient);
 
 router.put('/:id', validateRole.validateRole('professor'), clientController.updateClient);
 
