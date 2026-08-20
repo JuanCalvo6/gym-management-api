@@ -145,7 +145,7 @@ describe('createEnrollment', ()=>{
 });
 
 describe('getAllEnrollments', ()=>{
-    it('Should retunr all enrollments', async()=>{
+    it('Should return all enrollments', async()=>{
         const mockEnrollments = [
             {
                 id : 1,

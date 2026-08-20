@@ -4,10 +4,11 @@ const attendanceModel = require('./attendanceModel');
 const clientService = require('../clients/clientService');
 const enrollmentService = require('../enrollments/enrollmentService');
 const membershipService = require('../memberships/membershipService');
+const {timeToMinutes} = require('../../utils/timeUtils');
 
 const createAttendance = async(idClient)=>{
     const existingClient = await clientService.getClientById(idClient);
-    if(existingClient === 'B')
+    if(existingClient.estado === 'B')
         throw new AppError('Client is inactive', 409);
 
     const existingEnrollment = await enrollmentService.getCurrentEnrollmentByClient(idClient);
@@ -20,7 +21,7 @@ const createAttendance = async(idClient)=>{
     const start = timeToMinutes(membership.horaInicio);
     const end = timeToMinutes(membership.horaFin);
     const now = new Date();
-    const current = now.getHours()*60 + now.getMinutes;
+    const current = now.getHours()*60 + now.getMinutes();
 
     if(current < start || current > end)
         throw new AppError('Attendance is outside membership hours', 409);

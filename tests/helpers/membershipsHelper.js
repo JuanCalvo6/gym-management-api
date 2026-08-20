@@ -17,6 +17,20 @@ const createMembershipTest = async(token)=>{
     return res.body;
 };
 
+const createMembershipWithScheduleTest = async (token, start, end) => {
+    const res = await request(app)
+        .post('/api/memberships/')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+            name: 'testMembership',
+            start: start,
+            end: end,
+            price: 12000
+        });
+
+    return res.body;
+};
+
 const deleteMembershipTest = async(id) =>{
     await pool.query(
         `DELETE FROM Pases 
@@ -27,5 +41,6 @@ const deleteMembershipTest = async(id) =>{
 
 module.exports = {
     createMembershipTest,
+    createMembershipWithScheduleTest,
     deleteMembershipTest
 }

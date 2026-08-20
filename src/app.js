@@ -4,7 +4,7 @@ const professorRoutes = require('./modules/professors/professorRoutes');
 const membershipRoutes = require('./modules/memberships/membershipRoutes');
 const clientRoutes = require('./modules/clients/clientRoutes');
 const enrollmentRoutes = require('./modules/enrollments/enrollmentRoutes');
-const attendanceRoutes = requier('./modules/attendances/attendanceRoutes');
+const attendanceRoutes = require('./modules/attendances/attendanceRoutes');
 const validateToken = require('./middlewares/validateToken');
 
 const app = express();
