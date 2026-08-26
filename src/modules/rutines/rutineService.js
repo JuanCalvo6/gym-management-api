@@ -7,7 +7,7 @@ const createRutine = async(idClient, rutineData)=>{
 
     const existingRutine = await rutineModel.findRutineByUniqueData(idClient, rutineData.name);
     if(existingRutine)
-            throw new AppError('Rutine name already exists ', 409);
+            throw new AppError('Rutine name already exists', 409);
 
     const result = await rutineModel.createRutine(idClient, rutineData);
 
@@ -39,7 +39,7 @@ const updateRutine = async(id, rutineData)=>{
 
     const existingRutines = await rutineModel.findRutineByUniqueData(rutine.idCliente, rutineData.name);
     if(existingRutines)
-            throw new AppError('Rutine name already exists ', 409);
+            throw new AppError('Rutine name already exists', 409);
     
     const result = await rutineModel.updateRutine(id, rutineData);
 
@@ -50,7 +50,7 @@ const deactivateRutine = async(id)=>{
     const rutine = await getRutineById(id);
 
     if(rutine.estado === 'B')
-        throw new AppError('Rutine is alreadi inactive', 409);
+        throw new AppError('Rutine is already inactive', 409);
 
     await rutineModel.updateRutineStatus(id, 'B');
 
@@ -61,7 +61,7 @@ const activateRutine = async(id)=>{
     const rutine = await getRutineById(id);
 
     if(rutine.estado === 'A')
-        throw new AppError('Rutine is alreadi active', 409);
+        throw new AppError('Rutine is already active', 409);
 
     await rutineModel.updateRutineStatus(id, 'A');
 
