@@ -65,7 +65,7 @@ const getClientById = async(id)=>{
 };
 
 const updateClient = async(id, clientData) =>{
-    const [rows] = await pool.query(
+    await pool.query(
         `UPDATE Clientes
          SET
             nombres = ?,

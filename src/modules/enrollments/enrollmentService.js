@@ -23,7 +23,7 @@ const createEnrollment = async (clientId, professorId, enrollmentData)=>{
             const start = new Date(enrollment.diaInicio);
             const end = new Date(enrollment.diaFin);
 
-            return newStart <= end
+            return newStart <= end || start >= newEnd;
         });
 
         if(overlap)
