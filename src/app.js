@@ -5,7 +5,8 @@ const membershipRoutes = require('./modules/memberships/membershipRoutes');
 const clientRoutes = require('./modules/clients/clientRoutes');
 const enrollmentRoutes = require('./modules/enrollments/enrollmentRoutes');
 const attendanceRoutes = require('./modules/attendances/attendanceRoutes');
-const rutineRoutes = require('./modules/rutines/rutineRoutes');
+const routineRoutes = require('./modules/routines/routineRoutes');
+const routineLineRoutes = require('./modules/routineLines/routineLineRoutes');
 const validateToken = require('./middlewares/validateToken');
 
 const app = express();
@@ -18,7 +19,8 @@ app.use('/api/memberships', validateToken.validateToken, membershipRoutes);
 app.use('/api/clients', validateToken.validateToken, clientRoutes);
 app.use('/api/enrollments', validateToken.validateToken, enrollmentRoutes);
 app.use('/api/attendances', validateToken.validateToken, attendanceRoutes);
-app.use('/api/rutines', validateToken.validateToken, rutineRoutes);
+app.use('/api/routines', validateToken.validateToken, routineRoutes);
+app.use('/api/routine-lines', validateToken.validateToken,  routineLineRoutes);
 
 //Test Route
 app.get("/api/health", (req,res)=>{

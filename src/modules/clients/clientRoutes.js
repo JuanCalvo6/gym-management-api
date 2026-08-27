@@ -2,24 +2,24 @@ const express = require('express');
 const clientController = require('./clientController');
 const enrollmentController = require('../enrollments/enrollmentController');
 const attendanceController = require('../attendances/attendanceController');
-const rutineController = require('../rutines/rutineController');
+const routineController = require('../routines/routineController');
 const validateRole = require('../../middlewares/validateRole');
 const validateClient = require('./clientValidation');
 const validateEnrollment = require('../enrollments/enrollmentValidation');
-const validateRutine = require('../rutines/rutineValidation');
+const validateRoutine = require('../routines/routineValidation');
 
 const router = express.Router();
 
 router.post('/', validateRole.validateRole('professor'), validateClient.validateClient, clientController.createClient);
 router.post('/:id/enrollments', validateRole.validateRole('professor'), validateEnrollment.validateEnrollment, enrollmentController.createEnrollment);
 router.post('/:id/attendances', validateRole.validateRole('professor'), attendanceController.createAttendance);
-router.post('/:id/rutines', validateRutine.validateCreateRutine, validateRole.validateRole('professor'), rutineController.createRutine);
+router.post('/:id/routines', validateRoutine.validateCreateRoutine, validateRole.validateRole('professor'), routineController.createRoutine);
 
 router.get('/', validateRole.validateRole('professor'), clientController.getAllClients);
 router.get('/:id', validateRole.validateRole('professor'), clientController.getClientById);
 router.get('/:id/enrollments', validateRole.validateRole('professor'), enrollmentController.getEnrollmentsByClient);
 router.get('/:id/attendances', validateRole.validateRole('professor'), attendanceController.getAttendancesByClient);
-router.get('/:id/rutines', validateRole.validateRole('professor'), rutineController.getRutinesByClient);
+router.get('/:id/routines', validateRole.validateRole('professor'), routineController.getRoutinesByClient);
 
 router.put('/:id', validateRole.validateRole('professor'), clientController.updateClient);
 

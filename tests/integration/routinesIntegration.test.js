@@ -9,12 +9,12 @@ const {
     deleteClientTest
 } = require('../helpers/clientsHelper');
 const {
-    createRutineTest,
-    deleteRutineTest
-} = require('../helpers/rutinesHelper');
+    createRoutineTest,
+    deleteRoutineTest
+} = require('../helpers/routinesHelper');
 
-describe('POST /api/clients/:id/rutines', ()=>{
-    it('Should create a rutine successfully', async()=>{
+describe('POST /api/clients/:id/routines', ()=>{
+    it('Should create a routine successfully', async()=>{
         const tokenProfessor = await getToken(
             process.env.USER_PROFESSOR_TEST,
             process.env.PASSWORD_PROFESSOR_TEST
@@ -23,16 +23,16 @@ describe('POST /api/clients/:id/rutines', ()=>{
         const clientTest = await createClientTest(tokenProfessor);
 
         const res = await request(app)
-            .post(`/api/clients/${clientTest.id}/rutines`)
+            .post(`/api/clients/${clientTest.id}/routines`)
             .set('Authorization', `Bearer ${tokenProfessor}`)
             .send({
-                name : 'RutineTest',
+                name : 'RoutineTest',
                 notes : 'Note test'
             });
 
         expect(res.statusCode).toBe(201);
 
-        await deleteRutineTest(res.body.id);
+        await deleteRoutineTest(res.body.id);
         await deleteClientTest(clientTest.id);
     });
 
@@ -45,7 +45,7 @@ describe('POST /api/clients/:id/rutines', ()=>{
         const clientTest = await createClientTest(tokenProfessor);
 
         const res = await request(app)
-            .post(`/api/clients/${clientTest.id}/rutines`)
+            .post(`/api/clients/${clientTest.id}/routines`)
             .set('Authorization', `Bearer ${tokenProfessor}`)
             .send({
                 notes : 'Note test'
@@ -56,32 +56,32 @@ describe('POST /api/clients/:id/rutines', ()=>{
         await deleteClientTest(clientTest.id);
     });
     
-    it('Should fail if rutine already exists', async()=>{
+    it('Should fail if routine already exists', async()=>{
         const tokenProfessor = await getToken(
             process.env.USER_PROFESSOR_TEST,
             process.env.PASSWORD_PROFESSOR_TEST
         );
 
         const clientTest = await createClientTest(tokenProfessor);
-        const rutineTest = await createRutineTest(clientTest.id, tokenProfessor);
+        const routineTest = await createRoutineTest(clientTest.id, tokenProfessor);
 
         const res = await request(app)
-            .post(`/api/clients/${clientTest.id}/rutines`)
+            .post(`/api/clients/${clientTest.id}/routines`)
             .set('Authorization', `Bearer ${tokenProfessor}`)
             .send({
-                name : 'RutineTest',
+                name : 'RoutineTest',
                 notes : 'Note test'
             });
 
         expect(res.statusCode).toBe(409);
 
-        await deleteRutineTest(rutineTest.id);
+        await deleteRoutineTest(routineTest.id);
         await deleteClientTest(clientTest.id);
     });
 });
 
-describe('GET /api/clients/:id/rutines', ()=>{
-    it('Should return rutines by client', async()=>{
+describe('GET /api/clients/:id/routines', ()=>{
+    it('Should return routines by client', async()=>{
         const tokenProfessor = await getToken(
             process.env.USER_PROFESSOR_TEST,
             process.env.PASSWORD_PROFESSOR_TEST
@@ -90,7 +90,7 @@ describe('GET /api/clients/:id/rutines', ()=>{
         const clientTest = await createClientTest(tokenProfessor);
 
         const res = await request(app)
-            .get(`/api/clients/${clientTest.id}/rutines`)
+            .get(`/api/clients/${clientTest.id}/routines`)
             .set('Authorization', `Bearer ${tokenProfessor}`);
 
         expect(res.statusCode).toBe(200);
@@ -99,23 +99,23 @@ describe('GET /api/clients/:id/rutines', ()=>{
     });
 });
 
-describe('GET /api/rutines/:id', ()=>{
-    it('Should return rutine by id', async()=>{
+describe('GET /api/routines/:id', ()=>{
+    it('Should return routine by id', async()=>{
         const tokenProfessor = await getToken(
             process.env.USER_PROFESSOR_TEST,
             process.env.PASSWORD_PROFESSOR_TEST
         );
 
         const clientTest = await createClientTest(tokenProfessor);
-        const rutineTest = await createRutineTest(clientTest.id, tokenProfessor);
+        const routineTest = await createRoutineTest(clientTest.id, tokenProfessor);
 
         const res = await request(app)
-            .get(`/api/rutines/${rutineTest.id}`)
+            .get(`/api/routines/${routineTest.id}`)
             .set('Authorization', `Bearer ${tokenProfessor}`);
 
         expect(res.statusCode).toBe(200);
 
-        await deleteRutineTest(rutineTest.id);
+        await deleteRoutineTest(routineTest.id);
         await deleteClientTest(clientTest.id);
     });
 
@@ -126,180 +126,180 @@ describe('GET /api/rutines/:id', ()=>{
         );
 
         const res = await request(app)
-            .get('/api/rutines/abc')
+            .get('/api/routines/abc')
             .set('Authorization', `Bearer ${tokenProfessor}`);
 
         expect(res.status).toBe(400);
     });
 
-    it('Should fail if rutine does not exist', async()=>{
+    it('Should fail if routine does not exist', async()=>{
         const tokenProfessor = await getToken(
             process.env.USER_PROFESSOR_TEST,
             process.env.PASSWORD_PROFESSOR_TEST
         );
 
         const res = await request(app)
-            .get('/api/rutines/9999')
+            .get('/api/routines/9999')
             .set('Authorization', `Bearer ${tokenProfessor}`);
 
         expect(res.status).toBe(404);
     });
 });
 
-describe('PUT /api/rutines/:id', ()=>{
-    it('Should update rutine successfully', async()=>{
+describe('PUT /api/routines/:id', ()=>{
+    it('Should update routine successfully', async()=>{
         const tokenProfessor = await getToken(
             process.env.USER_PROFESSOR_TEST,
             process.env.PASSWORD_PROFESSOR_TEST
         );
 
         const clientTest = await createClientTest(tokenProfessor);
-        const rutineTest = await createRutineTest(clientTest.id, tokenProfessor);
+        const routineTest = await createRoutineTest(clientTest.id, tokenProfessor);
 
         const res = await request(app)
-            .put(`/api/rutines/${rutineTest.id}`)
+            .put(`/api/routines/${routineTest.id}`)
             .set('Authorization', `Bearer ${tokenProfessor}`)
             .send({
-                name : 'New Rutine name'
+                name : 'New Routine name'
             });
 
         expect(res.statusCode).toBe(200)
         
-        await deleteRutineTest(rutineTest.id);
+        await deleteRoutineTest(routineTest.id);
         await deleteClientTest(clientTest.id);
     });
 
-    it('Should fail if rutine name already exist', async()=>{
+    it('Should fail if routine name already exist', async()=>{
         const tokenProfessor = await getToken(
             process.env.USER_PROFESSOR_TEST,
             process.env.PASSWORD_PROFESSOR_TEST
         );
 
         const clientTest = await createClientTest(tokenProfessor);
-        const rutineTest = await createRutineTest(clientTest.id, tokenProfessor);
-        const rutineUpdate = await request(app)
-            .post(`/api/clients/${clientTest.id}/rutines`)
+        const routineTest = await createRoutineTest(clientTest.id, tokenProfessor);
+        const routineUpdate = await request(app)
+            .post(`/api/clients/${clientTest.id}/routines`)
             .set('Authorization', `Bearer ${tokenProfessor}`)
             .send({
-                name : 'RutineUpdate',
+                name : 'RoutineUpdate',
                 notes : 'Note test'
             });
 
         const res = await request(app)
-            .put(`/api/rutines/${rutineUpdate.body.id}`)
+            .put(`/api/routines/${routineUpdate.body.id}`)
             .set('Authorization', `Bearer ${tokenProfessor}`)
             .send({
-                name : 'RutineTest'
+                name : 'RoutineTest'
             });
         
         expect(res.statusCode).toBe(409)
         
-        await deleteRutineTest(rutineTest.id);
-        await deleteRutineTest(rutineUpdate.body.id);
+        await deleteRoutineTest(routineTest.id);
+        await deleteRoutineTest(routineUpdate.body.id);
         await deleteClientTest(clientTest.id);
     });
 });
 
-describe('PATCH /api/rutines/:id/deactivate', ()=>{
-    it('Should deactivate rutine', async()=>{
+describe('PATCH /api/routines/:id/deactivate', ()=>{
+    it('Should deactivate routine', async()=>{
         const tokenProfessor = await getToken(
             process.env.USER_PROFESSOR_TEST,
             process.env.PASSWORD_PROFESSOR_TEST
         );
 
         const clientTest = await createClientTest(tokenProfessor);
-        const rutineTest = await createRutineTest(clientTest.id, tokenProfessor);
+        const routineTest = await createRoutineTest(clientTest.id, tokenProfessor);
 
         const res = await request(app)
-            .patch(`/api/rutines/${rutineTest.id}/deactivate`)
+            .patch(`/api/routines/${routineTest.id}/deactivate`)
             .set('Authorization', `Bearer ${tokenProfessor}`);
 
         expect(res.statusCode).toBe(200);
 
-        await deleteRutineTest(rutineTest.id);
+        await deleteRoutineTest(routineTest.id);
         await deleteClientTest(clientTest.id);
     });
 
-    it('Should fail if rutine is already deactivate', async()=>{
+    it('Should fail if routine is already deactivate', async()=>{
         const tokenProfessor = await getToken(
             process.env.USER_PROFESSOR_TEST,
             process.env.PASSWORD_PROFESSOR_TEST
         );
 
         const clientTest = await createClientTest(tokenProfessor);
-        const rutineTest = await createRutineTest(clientTest.id, tokenProfessor);
+        const routineTest = await createRoutineTest(clientTest.id, tokenProfessor);
 
         await request(app)
-            .patch(`/api/rutines/${rutineTest.id}/deactivate`)
+            .patch(`/api/routines/${routineTest.id}/deactivate`)
             .set('Authorization', `Bearer ${tokenProfessor}`);
         
         const res = await request(app)
-        .patch(`/api/rutines/${rutineTest.id}/deactivate`)
+        .patch(`/api/routines/${routineTest.id}/deactivate`)
         .set('Authorization', `Bearer ${tokenProfessor}`);
 
         expect(res.statusCode).toBe(409);
 
-        await deleteRutineTest(rutineTest.id);
+        await deleteRoutineTest(routineTest.id);
         await deleteClientTest(clientTest.id);
     });
 });
 
-describe('PATCH /api/rutines/:id/activate', ()=>{
-    it('Should activate rutine', async()=>{
+describe('PATCH /api/routines/:id/activate', ()=>{
+    it('Should activate routine', async()=>{
         const tokenProfessor = await getToken(
             process.env.USER_PROFESSOR_TEST,
             process.env.PASSWORD_PROFESSOR_TEST
         );
 
         const clientTest = await createClientTest(tokenProfessor);
-        const rutineTest = await createRutineTest(clientTest.id, tokenProfessor);
+        const routineTest = await createRoutineTest(clientTest.id, tokenProfessor);
 
         await request(app)
-            .patch(`/api/rutines/${rutineTest.id}/deactivate`)
+            .patch(`/api/routines/${routineTest.id}/deactivate`)
             .set('Authorization', `Bearer ${tokenProfessor}`);
         
         const res = await request(app)
-        .patch(`/api/rutines/${rutineTest.id}/activate`)
+        .patch(`/api/routines/${routineTest.id}/activate`)
         .set('Authorization', `Bearer ${tokenProfessor}`);
 
         expect(res.statusCode).toBe(200);
 
-        await deleteRutineTest(rutineTest.id);
+        await deleteRoutineTest(routineTest.id);
         await deleteClientTest(clientTest.id);
     });
 
-    it('Should fail if rutine is already activate', async()=>{
+    it('Should fail if routine is already activate', async()=>{
         const tokenProfessor = await getToken(
             process.env.USER_PROFESSOR_TEST,
             process.env.PASSWORD_PROFESSOR_TEST
         );
 
         const clientTest = await createClientTest(tokenProfessor);
-        const rutineTest = await createRutineTest(clientTest.id, tokenProfessor);
+        const routineTest = await createRoutineTest(clientTest.id, tokenProfessor);
 
         const res = await request(app)
-            .patch(`/api/rutines/${rutineTest.id}/activate`)
+            .patch(`/api/routines/${routineTest.id}/activate`)
             .set('Authorization', `Bearer ${tokenProfessor}`);
 
         expect(res.statusCode).toBe(409);
 
-        await deleteRutineTest(rutineTest.id);
+        await deleteRoutineTest(routineTest.id);
         await deleteClientTest(clientTest.id);
     });
 });
 
-describe('DELETE /api/rutines/:id', ()=>{
-    it('Should delete rutine successfully', async()=>{
+describe('DELETE /api/routines/:id', ()=>{
+    it('Should delete routine successfully', async()=>{
         const tokenProfessor = await getToken(
             process.env.USER_PROFESSOR_TEST,
             process.env.PASSWORD_PROFESSOR_TEST
         );
 
         const clientTest = await createClientTest(tokenProfessor);
-        const rutineTest = await createRutineTest(clientTest.id, tokenProfessor);
+        const routineTest = await createRoutineTest(clientTest.id, tokenProfessor);
 
         const res = await request(app)
-            .delete(`/api/rutines/${rutineTest.id}`)
+            .delete(`/api/routines/${routineTest.id}`)
             .set('Authorization', `Bearer ${tokenProfessor}`);
         expect(res.statusCode).toBe(204);
 

@@ -1,13 +1,13 @@
 const pool = require('../../config/db');
 
-const createRutine = async(IdClient, rutineData)=>{
+const createRoutine = async(IdClient, routineData)=>{
     const [result] = await pool.query(
         `INSERT INTO Rutinas (idCliente, nombre, observaciones, estado)
          VALUES (?, ?, ?, ?)`,
          [
             IdClient,
-            rutineData.name,
-            rutineData.notes,
+            routineData.name,
+            routineData.notes,
             'A'
          ]
     );
@@ -15,7 +15,7 @@ const createRutine = async(IdClient, rutineData)=>{
     return {id : result.insertId};
 };
 
-const findRutineByUniqueData = async(idClient, name)=>{
+const findRoutineByUniqueData = async(idClient, name)=>{
     const [rows] = await pool.query(
         `SELECT 1
          FROM Rutinas
@@ -27,7 +27,7 @@ const findRutineByUniqueData = async(idClient, name)=>{
     return rows[0] || null;
 };
 
-const getRutinesByClient = async(idClient)=>{
+const getRoutinesByClient = async(idClient)=>{
     const [rows] = await pool.query(
         `SELECT idRutina AS id, idCliente, nombre, observaciones, estado
          FROM Rutinas
@@ -38,7 +38,7 @@ const getRutinesByClient = async(idClient)=>{
     return rows;
 };
 
-const getRutineById = async(id)=>{
+const getRoutineById = async(id)=>{
     const [rows] = await pool.query(
         `SELECT idRutina AS id, idCliente, nombre, observaciones, estado
          FROM Rutinas
@@ -49,7 +49,7 @@ const getRutineById = async(id)=>{
     return rows[0] || null;
 };
 
-const updateRutine = async(id, rutineData)=>{
+const updateRoutine = async(id, rutineData)=>{
     await pool.query(
         `UPDATE Rutinas
          SET
@@ -66,7 +66,7 @@ const updateRutine = async(id, rutineData)=>{
     return {id : id};
 };
 
-const updateRutineStatus = async(id, status)=>{
+const updateRoutineStatus = async(id, status)=>{
     await pool.query(
         `UPDATE Rutinas
          SET estado = ?
@@ -75,7 +75,7 @@ const updateRutineStatus = async(id, status)=>{
     );
 };
 
-const deleteRutine = async(id)=>{
+const deleteRoutine = async(id)=>{
     await pool.query(
         `DELETE FROM Rutinas
         WHERE idRutina = ?`,
@@ -84,11 +84,11 @@ const deleteRutine = async(id)=>{
 };
 
 module.exports = {
-    createRutine,
-    findRutineByUniqueData,
-    getRutinesByClient,
-    getRutineById,
-    updateRutine,
-    updateRutineStatus,
-    deleteRutine
+    createRoutine,
+    findRoutineByUniqueData,
+    getRoutinesByClient,
+    getRoutineById,
+    updateRoutine,
+    updateRoutineStatus,
+    deleteRoutine
 };

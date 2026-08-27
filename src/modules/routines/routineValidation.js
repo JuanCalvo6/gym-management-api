@@ -1,6 +1,6 @@
 const AppError = require('../../utils/AppError');
 
-const validateCreateRutine = (req, res, next) =>{
+const validateCreateRoutine = (req, res, next) =>{
     const {
         name,
         notes
@@ -21,7 +21,7 @@ const validateCreateRutine = (req, res, next) =>{
     }
 };
 
-const validateUpdateRutine = (req, res, next) =>{
+const validateUpdateRoutine = (req, res, next) =>{
     const {name, notes} = req.body;
 
     try {
@@ -39,6 +39,6 @@ const validateUpdateRutine = (req, res, next) =>{
 };
 
 module.exports = {
-    validateCreateRutine,
-    validateUpdateRutine
+    validateCreateRoutine,
+    validateUpdateRoutine
 };
