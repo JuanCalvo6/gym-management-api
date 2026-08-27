@@ -35,6 +35,7 @@ const getRoutinesByClient = async(idClient)=>{
          ORDER BY estado, nombre`,
          [idClient]
     );
+    
     return rows;
 };
 
