@@ -19,7 +19,7 @@ router.get('/', validateRole.validateRole('professor'), clientController.getAllC
 router.get('/:id', validateRole.validateRole('professor'), clientController.getClientById);
 router.get('/:id/enrollments', validateRole.validateRole('professor'), enrollmentController.getEnrollmentsByClient);
 router.get('/:id/attendances', validateRole.validateRole('professor'), attendanceController.getAttendancesByClient);
-router.get('/:id/rutines', validateRole.validateRole('professor'), rutineController.getRutineById);
+router.get('/:id/rutines', validateRole.validateRole('professor'), rutineController.getRutinesByClient);
 
 router.put('/:id', validateRole.validateRole('professor'), clientController.updateClient);
 

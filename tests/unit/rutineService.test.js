@@ -6,7 +6,7 @@ jest.mock('../../src/modules/clients/clientService');
 jest.mock('../../src/modules/rutines/rutineModel');
 
 describe('createRutine', ()=>{
-    it('Should creat a rutine successfully', async()=>{
+    it('Should create a rutine successfully', async()=>{
         const rutineData = {
             name : 'Rutine',
             notes : 'None'

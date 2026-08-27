@@ -2,9 +2,9 @@ const rutineService = require('./rutineService');
 
 const createRutine = async(req, res) =>{
     try {
-        const idClient = req.params;
+        const {id} = req.params;
 
-        const rutine = await rutineService.createRutine(idClient, req.body);
+        const rutine = await rutineService.createRutine(id, req.body);
 
         res.status(201).json(rutine);
 
@@ -15,9 +15,9 @@ const createRutine = async(req, res) =>{
 
 const getRutinesByClient = async(req, res) =>{
     try {
-        const {idClient} = req.params;
+        const {id} = req.params;
 
-        const rutines = await rutineService.getRutinesByClient(idClient);
+        const rutines = await rutineService.getRutinesByClient(id);
 
         res.status(200).json(rutines);
 

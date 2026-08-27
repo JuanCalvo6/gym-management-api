@@ -8,7 +8,7 @@ const validateCreateRutine = (req, res, next) =>{
 
     try {
         if(!name)
-            throw new AppError('Missing require fields', 400);
+            throw new AppError('Missing required field', 400);
         if(name.length > 45)
             throw new AppError('Name cannot exceed 45 characters', 400);
 

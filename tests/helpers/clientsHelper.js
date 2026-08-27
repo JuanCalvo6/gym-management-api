@@ -25,9 +25,9 @@ const deleteClientTest = async(id)=>{
             WHERE idCliente = ?`,
             [id]
         );
-}
+};
 
 module.exports = {
     createClientTest,
     deleteClientTest
-}
+};
