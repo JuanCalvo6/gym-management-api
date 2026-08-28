@@ -19,7 +19,7 @@ const getRoutineLinesByRoutine = async(idRoutine)=>{
 };
 
 const getRoutineLineById = async(id)=>{
-    if(NaN(id))
+    if(isNaN(id))
         throw new AppError('Invalid routineLine id', 400);
 
     const routineLine = await routineLineModel.getRoutineLineById(id);

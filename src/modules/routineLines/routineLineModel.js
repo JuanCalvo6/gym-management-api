@@ -40,21 +40,36 @@ const getRoutineLineById = async(id)=>{
 };
 
 const updateRoutineLine = async(id, routineLineData)=>{
+    const fields = [];
+    const values = [];
+
+    if (routineLineData.exercise !== undefined) {
+        fields.push('ejercicio = ?');
+        values.push(routineLineData.exercise);
+    }
+
+    if (routineLineData.repetitions !== undefined) {
+        fields.push('repeticiones = ?');
+        values.push(routineLineData.repetitions);
+    }
+
+    if (routineLineData.sets !== undefined) {
+        fields.push('series = ?');
+        values.push(routineLineData.sets);
+    }
+
+    if (routineLineData.rest !== undefined) {
+        fields.push('descanso = ?');
+        values.push(routineLineData.rest);
+    }
+
+    values.push(id);
+
     await pool.query(
-        `UPDATE lineasDeRutina
-         SET
-            ejercicio = ?,
-            repeticiones = ?,
-            series = ?,
-            descanso = ?
+        `UPDATE LineasDeRutina
+         SET ${fields.join(', ')}
          WHERE idLineaDeRutina = ?`,
-         [
-            routineLineData.exercise,
-            routineLineData.repetitions,
-            routineLineData.sets,
-            routineLineData.rest,
-            id
-         ]
+        values
     );
 
     return {id : id};

@@ -1,14 +1,14 @@
 const AppError = require('../../utils/AppError');
 
 const validateCreateRoutineLine = (req, res, next) =>{
-    const {
-        exercise,
-        repetitions,
-        sets,
-        rest
-    } = req.body;
-
     try {
+        const {
+            exercise,
+            repetitions,
+            sets,
+            rest
+        } = req.body;
+
         if(!exercise)
             throw new AppError('Missing required field', 400);
         if(exercise.length > 20)
@@ -31,14 +31,17 @@ const validateCreateRoutineLine = (req, res, next) =>{
 };
 
 const validateUpdateRoutineLine = (req, res, next) =>{
-    const {
-        exercise,
-        repetitions,
-        sets,
-        rest
-    } = req.body;
-
     try {
+        if (Object.keys(req.body).length === 0)
+            throw new AppError('No data to update', 400);
+    
+        const {
+            exercise,
+            repetitions,
+            sets,
+            rest
+        } = req.body;
+
         if(exercise && exercise.length > 20)
             throw new AppError('Exercise cannot exceed 20 characters', 400);
 
