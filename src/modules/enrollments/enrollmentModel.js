@@ -1,14 +1,14 @@
 const pool = require('../../config/db');
 
 
-const createEnrollment = async (professorId, clientId, enrollmentData, price)=>{
+const createEnrollment = async (idProfessor, idClient, enrollmentData, price)=>{
     const [result] = await pool.query(
         `INSERT INTO Inscripciones (idProfesor, idCliente, idPase, diaInicio, diaFin, precio, estado)
          VALUES (?, ?, ?, ?, ?, ?, ?)`,
          [
-            professorId,
-            clientId,
-            enrollmentData.membershipId,
+            idProfessor,
+            idClient,
+            enrollmentData.idMembership,
             enrollmentData.startDate,
             enrollmentData.endDate,
             price,
@@ -21,7 +21,14 @@ const createEnrollment = async (professorId, clientId, enrollmentData, price)=>{
 
 const getAllEnrollments = async()=>{
     const [rows] = await pool.query(
-        `SELECT idInscripcion AS id, idCliente, idProfesor, idPase, diaInicio, diaFin, precio, estado
+        `SELECT idInscripcion AS id, 
+                idCliente AS idClient, 
+                idProfesor AS idProfessor, 
+                idPase AS idMembership, 
+                diaInicio AS startDate, 
+                diaFin AS endDate, 
+                precio AS price, 
+                estado AS status
          FROM Inscripciones
          ORDER BY diaInicio`
     );
@@ -31,7 +38,13 @@ const getAllEnrollments = async()=>{
 
 const getActiveEnrollmentsByClient = async(idClient)=> {
     const [rows] = await pool.query(
-        `SELECT idInscripcion AS id, idProfesor, idPase, diaInicio, diaFin, precio
+        `SELECT idInscripcion AS id, 
+                idCliente AS idClient, 
+                idProfesor AS idProfessor, 
+                idPase AS idMembership, 
+                diaInicio AS startDate, 
+                diaFin AS endDate, 
+                precio AS price
          FROM Inscripciones
          WHERE estado = 'A' AND idCliente = ?
          ORDER BY diaInicio`,
@@ -43,7 +56,12 @@ const getActiveEnrollmentsByClient = async(idClient)=> {
 
 const getEnrollmentsByClient = async(idClient)=>{
     const [rows] = await pool.query(
-        `SELECT idInscripcion AS id, idProfesor, idPase, diaInicio, diaFin, precio
+        `SELECT idInscripcion AS id, 
+                idProfesor AS idProfessor, 
+                idPase AS idMembership, 
+                diaInicio AS startDate, 
+                diaFin AS endDate, 
+                precio AS price
          FROM Inscripciones
          WHERE idCliente = ?
          ORDER BY diaInicio`,
@@ -55,7 +73,13 @@ const getEnrollmentsByClient = async(idClient)=>{
 
 const getEnrollmentById = async(id)=>{
     const [rows] = await pool.query(
-        `SELECT idInscripcion AS id, idProfesor, idPase, diaInicio, diaFin, precio, estado
+        `SELECT idInscripcion AS id, 
+                idProfesor AS idProfessor, 
+                idPase AS idMembership, 
+                diaInicio AS startDate, 
+                diaFin AS endDate, 
+                precio AS price, 
+                estado AS status
          FROM Inscripciones
          WHERE idInscripcion = ?
          ORDER BY diaInicio`,

@@ -18,12 +18,12 @@ describe('createEnrollment', ()=>{
 
         clientService.getClientById.mockResolvedValue({
             id : 1,
-            estado : 'A'
+            status : 'A'
         });
 
         membershipService.getMembershipById.mockResolvedValue({
-            estado : 'A',
-            precio : 12000
+            status : 'A',
+            price : 12000
         });
 
         enrollmentModel.getActiveEnrollmentsByClient.mockResolvedValue([]);
@@ -47,7 +47,7 @@ describe('createEnrollment', ()=>{
 
         clientService.getClientById.mockResolvedValue({
             id : 1,
-            estado : 'B'
+            status : 'B'
         });
 
 
@@ -69,12 +69,12 @@ describe('createEnrollment', ()=>{
 
         clientService.getClientById.mockResolvedValue({
             id : 1,
-            estado : 'A'
+            status : 'A'
         });
 
         membershipService.getMembershipById.mockResolvedValue({
-            estado : 'B',
-            precio : 12000
+            status : 'B',
+            price : 12000
         });
 
             await expect(enrollmentService.createEnrollment(
@@ -94,17 +94,17 @@ describe('createEnrollment', ()=>{
 
         clientService.getClientById.mockResolvedValue({
             id : 1,
-            estado : 'A'
+            status : 'A'
         });
 
         membershipService.getMembershipById.mockResolvedValue({
-            estado : 'A',
-            precio : 12000
+            status : 'A',
+            price : 12000
         });
 
         enrollmentModel.getActiveEnrollmentsByClient.mockResolvedValue([{
-            diaInicio : '2026-08-01',
-            diaFin : '2026-08-31' 
+            startDate : '2026-08-01',
+            endDate : '2026-08-31' 
         }]);
 
         await expect(
@@ -121,17 +121,17 @@ describe('createEnrollment', ()=>{
 
         clientService.getClientById.mockResolvedValue({
             id : 1,
-            estado : 'A'
+            status : 'A'
         });
 
         membershipService.getMembershipById.mockResolvedValue({
-            estado : 'A',
-            precio : 12000
+            status : 'A',
+            price : 12000
         });
 
         enrollmentModel.getActiveEnrollmentsByClient.mockResolvedValue([{
-            diaInicio : '2026-08-01',
-            diaFin : '2026-08-31' 
+            startDate : '2026-08-01',
+            endDate : '2026-08-31' 
         }]);
 
         enrollmentModel.createEnrollment.mockResolvedValue({id : 2});
@@ -149,23 +149,23 @@ describe('getAllEnrollments', ()=>{
         const mockEnrollments = [
             {
                 id : 1,
-                idCliente : 1,
-                idProfesor : 1,
-                idPase : 2,
-                diaInicio : '2025-01-25',
-                diaFin : '2025-02-25',
-                precio : 10000,
-                estado : 'B'
+                idClient : 1,
+                idProfessor : 1,
+                idMembership : 2,
+                startDate : '2025-01-25',
+                endDate : '2025-02-25',
+                prcie : 10000,
+                status : 'B'
             },
             {
                 id : 2,
-                idCliente : 4,
-                idProfesor : 2,
-                idPase : 1,
-                diaInicio : '2026-07-1',
-                diaFin : '2026-08-1',
-                precio : 15000,
-                estado : 'B'
+                idClient : 4,
+                idProfessor : 2,
+                idMembership : 1,
+                startDate : '2026-07-1',
+                endDate : '2026-08-1',
+                price : 15000,
+                status : 'B'
             }
         ];
 
@@ -182,13 +182,13 @@ describe('getEnrollmentById', ()=>{
     it('Should return enrollment by id', async()=>{
         const enrollment = {
             id : 1,
-            idCliente : 1,
-            idProfesor : 1,
-            idPase : 2,
-            diaInicio : '2025-01-25',
-            diaFin : '2025-02-25',
-            precio : 10000,
-            estado : 'B'
+            idClient : 1,
+            idProfessor : 1,
+            idMembership : 2,
+            startDate : '2025-01-25',
+            endDate : '2025-02-25',
+            price : 10000,
+            status : 'B'
         };
 
         enrollmentModel.getEnrollmentById.mockResolvedValue(enrollment);
@@ -218,29 +218,29 @@ describe('getEnrollmentByClient', ()=>{
         const enrollments = [
             {
                 id : 1,
-                idCliente : 1,
-                idProfesor : 1,
-                idPase : 2,
-                diaInicio : '2025-01-25',
-                diaFin : '2025-02-24',
-                precio : 10000,
-                estado : 'B'
+                idClient : 1,
+                idProfessor : 1,
+                idMembership : 2,
+                startDate : '2025-01-25',
+                endDate : '2025-02-24',
+                price : 10000,
+                status : 'B'
             },
             {
                 id : 5,
-                idCliente : 1,
-                idProfesor : 2,
-                idPase : 2,
-                diaInicio : '2025-02-25',
-                diaFin : '2025-03-24',
-                precio : 10000,
-                estado : 'A'
+                idClient : 1,
+                idProfessor : 2,
+                idMembership : 2,
+                startDate : '2025-02-25',
+                endDate : '2025-03-24',
+                price : 10000,
+                status : 'A'
             }
         ]
 
         clientService.getClientById.mockResolvedValue({
             id : 1,
-            estado : 'A'
+            status : 'A'
         });
 
         enrollmentModel.getEnrollmentsByClient.mockResolvedValue(enrollments);
@@ -256,7 +256,7 @@ describe('deactivateEnrollment', ()=>{
     it('Should deactivate enrollment', async()=>{
         enrollmentModel.getEnrollmentById.mockResolvedValue({
             id : 1,
-            estado : 'A'
+            status : 'A'
         });
 
         enrollmentModel.updateEnrollmentStatus.mockResolvedValue();
@@ -271,7 +271,7 @@ describe('deactivateEnrollment', ()=>{
     it('Should fail if enrollment anready is deactivate', async()=>{
         enrollmentModel.getEnrollmentById.mockResolvedValue({
             id : 1,
-            estado : 'B'
+            status : 'B'
         });
 
         await expect(enrollmentService.deactivateEnrollment(1))
@@ -283,7 +283,7 @@ describe('activateEnrollment', ()=>{
     it('Should activate enrollment', async()=>{
         enrollmentModel.getEnrollmentById.mockResolvedValue({
             id : 1,
-            estado : 'B'
+            status : 'B'
         });
 
         enrollmentModel.updateEnrollmentStatus.mockResolvedValue();
@@ -298,7 +298,7 @@ describe('activateEnrollment', ()=>{
     it('Should fail if enrollment anready is activate', async()=>{
         enrollmentModel.getEnrollmentById.mockResolvedValue({
             id : 1,
-            estado : 'A'
+            status : 'A'
         });
 
         await expect(enrollmentService.activateEnrollment(1))

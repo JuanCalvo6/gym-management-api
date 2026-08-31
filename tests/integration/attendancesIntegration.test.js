@@ -28,18 +28,13 @@ describe('POST api/clients/:id/attendances', ()=>{
             process.env.USER_PROFESSOR_TEST,
             process.env.PASSWORD_PROFESSOR_TEST
         );
-
-        const tokenAdmin = await getToken(
-            process.env.USER_ADMIN_TEST,
-            process.env.PASSWORD_ADMIN_TEST
-        );
-
-        const clientTest = await createClientTest(tokenProfessor);
+        
         const membershipTest = await createMembershipWithScheduleTest(
-            tokenAdmin,
             '00:00',
             '23:59'
         );
+
+        const clientTest = await createClientTest();
 
         const today = new Date();
         const startDate = new Date(today);
@@ -54,7 +49,7 @@ describe('POST api/clients/:id/attendances', ()=>{
             startDate,
             endDate
         );
-
+        
         const res = await request(app)
             .post(`/api/clients/${clientTest.id}/attendances`)
             .set('Authorization', `Bearer ${tokenProfessor}`);
@@ -109,14 +104,8 @@ describe('POST api/clients/:id/attendances', ()=>{
             process.env.PASSWORD_PROFESSOR_TEST
         );
 
-        const tokenAdmin = await getToken(
-            process.env.USER_ADMIN_TEST,
-            process.env.PASSWORD_ADMIN_TEST
-        );
-
         const clientTest = await createClientTest(tokenProfessor);
         const membershipTest = await createMembershipWithScheduleTest(
-            tokenAdmin,
             '00:00',
             '00:01'
         );

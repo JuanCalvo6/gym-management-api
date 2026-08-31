@@ -3,34 +3,32 @@ const enrollmentModel = require('./enrollmentModel');
 const clientService = require('../clients/clientService');
 const membershipService = require('../memberships/membershipService')
 
-const createEnrollment = async (clientId, professorId, enrollmentData)=>{
+const createEnrollment = async (idClient, idProfessor, enrollmentData)=>{
 
-    const existingClient = await clientService.getClientById(clientId);
-    if(existingClient.estado === 'B')
+    const existingClient = await clientService.getClientById(idClient);
+    if(existingClient.status === 'B')
         throw new AppError('Client is inactive', 409);
 
-    const existingMembership = await membershipService.getMembershipById(enrollmentData.membershipId);
-    if(existingMembership.estado === 'B')
+    const existingMembership = await membershipService.getMembershipById(enrollmentData.idMembership);
+    if(existingMembership.status === 'B')
         throw new AppError('Membership is inactive', 409);
 
-    const existingEnrollments = await enrollmentModel.getActiveEnrollmentsByClient(clientId);
-
+    const existingEnrollments = await enrollmentModel.getActiveEnrollmentsByClient(idClient);
     if(existingEnrollments){
         const newStart = new Date(enrollmentData.startDate);
         const newEnd = new Date(enrollmentData.endDate);
 
         const overlap = existingEnrollments.some(enrollment =>{
-            const start = new Date(enrollment.diaInicio);
-            const end = new Date(enrollment.diaFin);
-
+            const start = new Date(enrollment.startDate);
+            const end = new Date(enrollment.endDate);
+            console.log('Existing Data: ', start, end);
             return newStart <= end || start >= newEnd;
         });
-
         if(overlap)
             throw new AppError('Enrollment dates overlap with an existing enrollment',409);
     };
 
-    const result = await enrollmentModel.createEnrollment(professorId, clientId, enrollmentData, existingMembership.precio);
+    const result = await enrollmentModel.createEnrollment(idProfessor, idClient, enrollmentData, existingMembership.price);
 
     return result;
 };
@@ -69,8 +67,8 @@ const getCurrentEnrollmentByClient = async(idClient)=>{
     const today = new Date();
 
     return enrollments.find(enrollment =>{
-        const start = new Date(enrollment.diaInicio);
-        const end = new Date(enrollment.diaFin);
+        const start = new Date(enrollment.startDate);
+        const end = new Date(enrollment.endDate);
 
         return today >= start && today <= end;
     }) || null;
@@ -79,7 +77,7 @@ const getCurrentEnrollmentByClient = async(idClient)=>{
 const deactivateEnrollment = async(id) =>{
     const enrollment = await getEnrollmentById(id);
 
-    if(enrollment.estado === 'B')
+    if(enrollment.status === 'B')
         throw new AppError('Enrollment is already inactive', 409);
 
     await enrollmentModel.updateEnrollmentStatus(id, 'B');
@@ -90,7 +88,7 @@ const deactivateEnrollment = async(id) =>{
 const activateEnrollment = async(id) =>{
     const enrollment = await getEnrollmentById(id);
 
-    if(enrollment.estado === 'A')
+    if(enrollment.status === 'A')
         throw new AppError('Enrollment is already active', 409);
 
     await enrollmentModel.updateEnrollmentStatus(id, 'A');

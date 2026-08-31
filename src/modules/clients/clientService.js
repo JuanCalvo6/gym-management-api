@@ -32,22 +32,32 @@ const getClientById = async(id)=>{
 };
 
 const updateClient = async(id, clientData) =>{
-    await getClientById(id);
+    const client = await getClientById(id);
 
     const duplicatedClient = await clientModel.findClientByUniqueData(id, clientData.dni);
 
     if(duplicatedClient)
         throw new AppError('Client data already exists', 409);
 
-    const client = await clientModel.updateClient(id, clientData);
+    const updateData = {
+        name : clientData.name ?? client.name,
+        surname : clientData.surname ?? client.surname,
+        documentType : clientData.documentType ?? client.documentType,
+        dni : clientData.dni ?? client.dni,
+        phone : clientData.phone ?? client.phone,
+        address : clientData.address ?? client.address,
+        mail : clientData.mail ?? client.mail
+    };
 
-    return client;
+    const clientUpdate = await clientModel.updateClient(id, updateData);
+
+    return clientUpdate;
 };
 
 const deactivateClient = async(id) =>{
     const client = await getClientById(id);
 
-    if( client.estado === 'B')
+    if( client.status === 'B')
         throw new AppError('Client is already inactive', 409);
 
     await clientModel.updateClientStatus(id, 'B');
@@ -58,7 +68,7 @@ const deactivateClient = async(id) =>{
 const activateClient = async(id) =>{
     const client = await getClientById(id);
 
-    if( client.estado === 'A')
+    if( client.status === 'A')
             throw new AppError('Client is already active', 409);
 
     await clientModel.updateClientStatus(id, 'A');

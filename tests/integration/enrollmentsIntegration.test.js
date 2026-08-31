@@ -37,7 +37,7 @@ describe('POST /api/clients/:id/enrollments', ()=>{
             .post(`/api/clients/${clientTest.id}/enrollments`)
             .set('Authorization', `Bearer ${tokenProfessor}`)
             .send({
-                membershipId : membershipTest.id,
+                idMembership : membershipTest.id,
                 startDate : '2025-02-1',
                 endDate : '2025-03-01'
             });
@@ -66,7 +66,6 @@ describe('POST /api/clients/:id/enrollments', ()=>{
             });
 
         expect(res.statusCode).toBe(400);
-        await deleteEnrollmentTest(res.body.id);
         await deleteClientTest(clientTest.id);
     });
 
@@ -88,13 +87,12 @@ describe('POST /api/clients/:id/enrollments', ()=>{
             .post(`/api/clients/${clientTest.id}/enrollments`)
             .set('Authorization', `Bearer ${tokenProfessor}`)
             .send({
-                membershipId : membershipTest.id,
+                idMembership : membershipTest.id,
                 startDate : '2025-02-1',
                 endDate : '2025-01-01'
             });
 
         expect(res.statusCode).toBe(400);
-        await deleteEnrollmentTest(res.body.id);
         await deleteClientTest(clientTest.id);
         await deleteMembershipTest(membershipTest.id);
 
@@ -116,13 +114,13 @@ describe('POST /api/clients/:id/enrollments', ()=>{
             .post(`/api/clients/999/enrollments`)
             .set('Authorization', `Bearer ${tokenProfessor}`)
             .send({
-                membershipId : membershipTest.id,
+                idMembership : membershipTest.id,
                 startDate : '2025-02-1',
                 endDate : '2025-03-01'
             });
 
         expect(res.statusCode).toBe(404);
-        await deleteEnrollmentTest(res.body.id);
+
         await deleteMembershipTest(membershipTest.id);
 
     });
@@ -149,13 +147,13 @@ describe('POST /api/clients/:id/enrollments', ()=>{
             .post(`/api/clients/${clientTest.id}/enrollments`)
             .set('Authorization', `Bearer ${tokenProfessor}`)
             .send({
-                membershipId : membershipTest.id,
+                idMembership : membershipTest.id,
                 startDate : '2025-02-1',
                 endDate : '2025-03-01'
             });
 
         expect(res.statusCode).toBe(409);
-        await deleteEnrollmentTest(res.body.id);
+
         await deleteClientTest(clientTest.id);
         await deleteMembershipTest(membershipTest.id);
 
@@ -182,13 +180,13 @@ describe('POST /api/clients/:id/enrollments', ()=>{
             .post(`/api/clients/${clientTest.id}/enrollments`)
             .set('Authorization', `Bearer ${tokenProfessor}`)
             .send({
-                membershipId : membershipTest.id,
+                idMembership : membershipTest.id,
                 startDate : '2025-02-1',
                 endDate : '2025-03-01'
             });
 
         expect(res.statusCode).toBe(409);
-        await deleteEnrollmentTest(res.body.id);
+
         await deleteClientTest(clientTest.id);
         await deleteMembershipTest(membershipTest.id);
 
@@ -207,6 +205,7 @@ describe('POST /api/clients/:id/enrollments', ()=>{
 
         const clientTest = await createClientTest(tokenProfessor);
         const membershipTest = await createMembershipTest(tokenAdmin);
+
         const enrollmentTest = await createEnrollmentTest(
             clientTest.id, 
             tokenProfessor, 
@@ -217,13 +216,13 @@ describe('POST /api/clients/:id/enrollments', ()=>{
             .post(`/api/clients/${clientTest.id}/enrollments`)
             .set('Authorization', `Bearer ${tokenProfessor}`)
             .send({
-                membershipId : membershipTest.id,
+                idMembership : membershipTest.id,
                 startDate : '2025-02-15',
                 endDate : '2025-03-15'
             });
 
         expect(res.statusCode).toBe(409);
-        await deleteEnrollmentTest(res.body.id);
+
         await deleteEnrollmentTest(enrollmentTest.id);
         await deleteClientTest(clientTest.id);
         await deleteMembershipTest(membershipTest.id);

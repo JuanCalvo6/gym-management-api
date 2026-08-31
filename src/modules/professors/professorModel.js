@@ -2,7 +2,9 @@ const pool = require('../../config/db');
 
 const findExistingProfessor = async (user,dni,mail)=>{
     const [rows] = await pool.query(
-        `SELECT usuario, dni, mail
+        `SELECT usuario AS user, 
+                dni, 
+                mail
          FROM Profesores
          WHERE usuario = ? OR dni = ? OR mail = ?`,
         [user, dni, mail]
@@ -45,7 +47,15 @@ const createProfessor = async (professorData)=>{
 
 const getAllProfessors = async()=>{
     const [rows] = await pool.query(
-        `SELECT idProfesor AS id, nombres, apellidos, dni, telefono, direccion, mail, usuario, estado
+        `SELECT idProfesor AS id, 
+                nombres AS name, 
+                apellidos AS surname, 
+                dni, 
+                telefono AS phone, 
+                direccion AS address, 
+                mail, 
+                usuario AS user, 
+                estado AS status
          FROM Profesores
          WHERE estado = 'A'
          ORDER BY estado, apellidos, nombres`
@@ -56,7 +66,15 @@ const getAllProfessors = async()=>{
 
 const getProfessorById = async (id) =>{
     const [rows] = await pool.query(
-        `SELECT idProfesor AS id, nombres, apellidos, dni, telefono, direccion, mail, usuario, estado
+        `SELECT idProfesor AS id, 
+                nombres AS name, 
+                apellidos AS surname, 
+                dni, 
+                telefono AS phone, 
+                direccion AS address, 
+                mail, 
+                usuario AS user, 
+                estado AS status
         FROM Profesores
         WHERE idProfesor = ?`,
         [id]

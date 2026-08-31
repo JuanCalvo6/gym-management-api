@@ -35,7 +35,7 @@ describe("createProfessor", ()=>{
     });
 
     it('Should fail if username already exists', async()=>{
-        professorModel.findExistingProfessor.mockResolvedValue({usuario: "juantest"});
+        professorModel.findExistingProfessor.mockResolvedValue({user: "juantest"});
 
         await expect(professorService.createProfessor({
             name: "Juan",
@@ -79,13 +79,13 @@ describe("getAllProfessors", ()=>{
         const mockProfessors = [
             {
                 id: 1,
-                nombres: 'Juan',
-                apellidos: 'Perez'
+                name: 'Juan',
+                surname: 'Perez'
             },
             {
                 id: 2,
-                nombres: 'Maria',
-                apellidos: 'Castro'
+                name: 'Maria',
+                surname: 'Castro'
             }
         ];
 
@@ -102,7 +102,7 @@ describe("getprofessorById", ()=>{
     it('Should return professor by id', async()=>{
         const professor = {
             id : 1,
-            nombres : 'Juan'
+            name : 'Juan'
         };
 
         professorModel.getProfessorById.mockResolvedValue(professor);
@@ -216,7 +216,7 @@ describe("deactivateProfessor", ()=>{
     it('Should fail if professor is already deactivate', async()=>{
         professorModel.getProfessorById.mockResolvedValue({
             id : 1,
-            estado : 'B'
+            status : 'B'
         });
 
         await expect(professorService.deactivateProfessor(1))
@@ -252,7 +252,7 @@ describe("activateProfessor", ()=>{
     it('Should fail if professor is already activate', async()=>{
         professorModel.getProfessorById.mockResolvedValue({
             id : 1,
-            estado : 'A'
+            status : 'A'
         });
 
         await expect(professorService.activateProfessor(1))

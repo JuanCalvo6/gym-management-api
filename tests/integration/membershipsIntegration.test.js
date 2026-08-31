@@ -108,7 +108,7 @@ describe("GET /api/memberships/", ()=>{
             .set('Authorization', `Bearer ${token}`);
 
         expect(res.statusCode).toBe(200);
-        res.body.forEach(membership =>expect(membership.estado).toBe('A'));
+        res.body.forEach(membership =>expect(membership.status).toBe('A'));
     })
 });
 

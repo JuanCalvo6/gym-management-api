@@ -19,7 +19,13 @@ const createRoutineLine = async(idRoutine, idClient, routineLineData)=>{
 
 const getRoutineLinesByRoutine = async(idRoutine)=>{
     const [rows] = await pool.query(
-        `SELECT idLineaDeRutina AS id, idCliente, idRutina, ejercicio, repeticiones, series, descanso
+        `SELECT idLineaDeRutina AS id, 
+                idCliente AS idClient, 
+                idRutina AS idRoutine, 
+                ejercicio AS exercise, 
+                repeticiones AS repetitions, 
+                series AS sets, 
+                descanso AS rest
          FROM lineasDeRutina
          WHERE idRutina = ?`,
          [idRoutine]
@@ -30,7 +36,13 @@ const getRoutineLinesByRoutine = async(idRoutine)=>{
 
 const getRoutineLineById = async(id)=>{
     const [rows] = await pool.query(
-        `SELECT idLineaDeRutina AS id, idCliente, idRutina, ejercicio, repeticiones, series, descanso
+        `SELECT idLineaDeRutina AS id, 
+                idCliente AS idClient, 
+                idRutina AS idRoutine, 
+                ejercicio AS exercise, 
+                repeticiones AS repetitions, 
+                series AS sets, 
+                descanso AS rest
          FROM lineasDeRutina
          WHERE idLineaDeRutina = ?`,
          [id]
@@ -40,36 +52,21 @@ const getRoutineLineById = async(id)=>{
 };
 
 const updateRoutineLine = async(id, routineLineData)=>{
-    const fields = [];
-    const values = [];
-
-    if (routineLineData.exercise !== undefined) {
-        fields.push('ejercicio = ?');
-        values.push(routineLineData.exercise);
-    }
-
-    if (routineLineData.repetitions !== undefined) {
-        fields.push('repeticiones = ?');
-        values.push(routineLineData.repetitions);
-    }
-
-    if (routineLineData.sets !== undefined) {
-        fields.push('series = ?');
-        values.push(routineLineData.sets);
-    }
-
-    if (routineLineData.rest !== undefined) {
-        fields.push('descanso = ?');
-        values.push(routineLineData.rest);
-    }
-
-    values.push(id);
-
-    await pool.query(
+    const [rows] = await pool.query(
         `UPDATE LineasDeRutina
-         SET ${fields.join(', ')}
+         SET 
+            ejercicio = ?,
+            repeticiones = ?,
+            series = ?,
+            descanso = ?
          WHERE idLineaDeRutina = ?`,
-        values
+        [
+            routineLineData.exercise,
+            routineLineData.repetitions,
+            routineLineData.sets,
+            routineLineData.rest,
+            id
+        ]
     );
 
     return {id : id};

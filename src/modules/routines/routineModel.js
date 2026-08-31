@@ -29,7 +29,11 @@ const findRoutineByUniqueData = async(idClient, name)=>{
 
 const getRoutinesByClient = async(idClient)=>{
     const [rows] = await pool.query(
-        `SELECT idRutina AS id, idCliente, nombre, observaciones, estado
+        `SELECT idRutina AS id, 
+                idCliente AS idClient, 
+                nombre AS name, 
+                observaciones AS notes, 
+                estado AS status
          FROM Rutinas
          WHERE idCliente = ?
          ORDER BY estado, nombre`,
@@ -41,7 +45,11 @@ const getRoutinesByClient = async(idClient)=>{
 
 const getRoutineById = async(id)=>{
     const [rows] = await pool.query(
-        `SELECT idRutina AS id, idCliente, nombre, observaciones, estado
+        `SELECT idRutina AS id, 
+                idCliente AS idClient, 
+                nombre AS name, 
+                observaciones AS notes, 
+                estado AS status
          FROM Rutinas
          WHERE idRutina = ?`,
          [id]

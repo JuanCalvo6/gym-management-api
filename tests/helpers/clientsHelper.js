@@ -1,22 +1,22 @@
-const request = require('supertest');
-const app = require('../../src/app');
 const pool =  require('../../src/config/db');
 
-const createClientTest = async(token)=>{
-    const res = await request(app)
-                .post('/api/clients')
-                .set('Authorization', `Bearer ${token}`)
-                .send({
-                    name : 'Client',
-                    surname : 'Test',
-                    documentType : 'DNI',
-                    dni : '123456789',
-                    phone : '1234567890',
-                    address : 'calle test 12',
-                    mail : 'cliente@test.com'
-                });
+const createClientTest = async()=>{
+    const [result] = await pool.query(
+        `INSERT INTO Clientes (nombres, apellidos, tipoDni, dni, telefono, direccion, mail, estado)
+         VALUES( ?, ?, ?, ?, ?, ?, ?, ?)`,
+         [
+            'Client',
+            'Test',
+            'DNI',
+            '123456789',
+            '1234567890',
+            'calle test 12',
+            'cliente@test.com',
+            'A'
+         ]
+    );
 
-    return res.body;     
+    return {id : result.insertId};   
 };
 
 const deleteClientTest = async(id)=>{

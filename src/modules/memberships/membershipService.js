@@ -32,14 +32,21 @@ const getMembershipById = async(id)=>{
 };
 
 const updateMembership = async(id, membershipData)=>{
-    await getMembershipById(id);
+    const membership = await getMembershipById(id);
 
     const duplicatedMembership = await membershipModel.findMembershipByUniqueData(id, membershipData.name);
 
     if(duplicatedMembership)
         throw new AppError('Membership data already exists', 409);
 
-    const membership = await membershipModel.updateMembership(id, membershipData);
+    const updateData = {
+        name : membershipData.name ?? membership.name,
+        start : membershipData.start ?? membership.start,
+        end :  membershipData.end ?? membership.end,
+        price : membershipData.price ?? membership.price
+    };
+
+    const membershipUpdate = await membershipModel.updateMembership(id, updateData);
 
     return membership;
 };
@@ -47,7 +54,7 @@ const updateMembership = async(id, membershipData)=>{
 const deactivateMembership = async(id)=>{
     const membership = await getMembershipById(id);
 
-    if(membership.estado === 'B')
+    if(membership.status === 'B')
         throw new AppError('Membership is already inactive', 409);
 
     await membershipModel.updateMembershipStatus(id, 'B');
@@ -58,7 +65,7 @@ const deactivateMembership = async(id)=>{
 const activateMembership = async(id)=>{
     const membership = await getMembershipById(id);
 
-    if(membership.estado === 'A')
+    if(membership.status === 'A')
         throw new AppError('Membership is already active', 409);
 
     await membershipModel.updateMembershipStatus(id, 'A');

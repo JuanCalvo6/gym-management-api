@@ -138,7 +138,7 @@ describe("deactivateClient", ()=>{
     it('Should deactivate client successfully', async()=>{
         clientModel.getClientById.mockResolvedValue({
             id : 1,
-            estado : 'A'
+            status : 'A'
         });
 
         clientModel.updateClientStatus.mockResolvedValue();
@@ -153,7 +153,7 @@ describe("deactivateClient", ()=>{
     it('Should fail if client is already deactivate', async()=>{
         clientModel.getClientById.mockResolvedValue({
             id : 1,
-            estado : 'B'
+            status : 'B'
         });
 
         await expect(clientService.deactivateClient(1))
@@ -165,7 +165,7 @@ describe("activateClient", ()=>{
     it('Should activate client successfully', async()=>{
         clientModel.getClientById.mockResolvedValue({
             id : 1,
-            estado : 'B'
+            status : 'B'
         });
 
         clientModel.updateClientStatus.mockResolvedValue();
@@ -180,7 +180,7 @@ describe("activateClient", ()=>{
     it('Should fail if client is already activate', async()=>{
         clientModel.getClientById.mockResolvedValue({
             id : 1,
-            estado : 'A'
+            status : 'A'
         });
 
         await expect(clientService.activateClient(1))

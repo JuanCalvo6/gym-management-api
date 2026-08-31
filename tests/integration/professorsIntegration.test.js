@@ -3,28 +3,45 @@ require('dotenv').config();
 const pool = require('../../src/config/db');
 const request = require('supertest');
 const app = require('../../src/app');
+const {getToken} = require('../helpers/authHelper');
+const {
+    createProfessorTest,
+    deleteProfessorTest
+} = require('../helpers/professorsHelper');
 
 describe("POST /api/professors/", ()=>{
-    it("Should create a professor successefully", async ()=>{
-        const timestamp = Date.now();
+    it.only("Should create a professor successefully", async ()=>{
+        const tokenAdmin = await getToken(
+            process.env.USER_ADMIN_TEST,
+            process.env.PASSWORD_ADMIN_TEST
+        );
 
         const res = await request(app)
             .post('/api/professors/')
+            .set('Authorization', `Bearer ${tokenAdmin}`)
             .send({
-                name: "Juan",
-                surname: "Test",
-                dni: timestamp.toString(),
-                mail: `juan${timestamp}@test.com`,
-                user: `juan${timestamp}`,
+                name: "Pepe",
+                surname: "Tester",
+                dni: 22222222,
+                mail: 'pepe@test.com',
+                user: 'pepe123',
                 password: "123456"
             });
-        
+        console.log(res.body);
         expect(res.statusCode).toBe(201);
+
+        await deleteProfessorTest(res.body.id);
     });
 
     it("Should fail when required fields are missing", async()=>{
+        const tokenAdmin = await getToken(
+            process.env.USER_ADMIN_TEST,
+            process.env.PASSWORD_ADMIN_TEST
+        );
+
         const res = await request(app)
             .post('/api/professors/')
+            .set('Authorization', `Bearer ${tokenAdmin}`)
             .send({
                 name: "Juan",
                 surname: "Test",
@@ -37,89 +54,108 @@ describe("POST /api/professors/", ()=>{
     });
 
     it("Should fail when username already exists", async()=>{
-        const timestamp = Date.now();
+        const tokenAdmin = await getToken(
+            process.env.USER_ADMIN_TEST,
+            process.env.PASSWORD_ADMIN_TEST
+        );
+
         const professor = {
-            name: "Juan",
-            surname: "Test",
-            dni: timestamp.toString(),
-            mail: `juan${timestamp}@test.com`,
-            user: `juan${timestamp}`,
-            password: "123456"
+            name: "Juan2",
+            surname: "Tester",
+            dni: 22222222,
+            mail: `juan2@test.com`,
+            user: `juan123`,
+            password: "1234567"
         }
 
-        await request(app).post('/api/professors/').send(professor);
+        const professorTest = await createProfessorTest();
 
         const res = await request(app)
             .post('/api/professors/')
-            .send({
-                ...professor,
-                dni: (timestamp + 1).toString(),
-                mail: `otro${timestamp}@test.com`
-            });
+            .set('Authorization', `Bearer ${tokenAdmin}`)
+            .send(professor);
 
         expect(res.statusCode).toBe(409);
+        await deleteProfessorTest(professorTest.id)
     });
 
     it("Should fail when dni already exists", async()=>{
-        const timestamp = Date.now();
+        const tokenAdmin = await getToken(
+            process.env.USER_ADMIN_TEST,
+            process.env.PASSWORD_ADMIN_TEST
+        );
+
         const professor = {
-            name: "Juan",
-            surname: "Test",
-            dni: timestamp.toString(),
-            mail: `juan${timestamp}@test.com`,
-            user: `juan${timestamp}`,
-            password: "123456"
+            name: "Juan2",
+            surname: "Tester",
+            dni: 11111111,
+            mail: `juan2@test.com`,
+            user: `juan12`,
+            password: "1234567"
         }
 
-        await request(app).post('/api/professors/').send(professor);
+        const professorTest = await createProfessorTest();
 
         const res = await request(app)
             .post('/api/professors/')
-            .send({
-                ...professor,
-                user: `otro${timestamp}`,
-                mail: `otro${timestamp}@test.com`
-            });
-
+            .set('Authorization', `Bearer ${tokenAdmin}`)
+            .send(professor);
+ 
         expect(res.statusCode).toBe(409);
+        await deleteProfessorTest(professorTest.id);
     });
 
     it("Should fail when mail already exists", async()=>{
-        const timestamp = Date.now();
+        const tokenAdmin = await getToken(
+            process.env.USER_ADMIN_TEST,
+            process.env.PASSWORD_ADMIN_TEST
+        );
+
         const professor = {
-            name: "Juan",
-            surname: "Test",
-            dni: timestamp.toString(),
-            mail: `juan${timestamp}@test.com`,
-            user: `juan${timestamp}`,
-            password: "123456"
+            name: "Juan2",
+            surname: "Tester",
+            dni: 22222222,
+            mail: `juan@test.com`,
+            user: `juan12`,
+            password: "1234567"
         }
 
-        await request(app).post('/api/professors/').send(professor);
+        const professorTest = await createProfessorTest();
 
         const res = await request(app)
             .post('/api/professors/')
-            .send({
-                ...professor,
-                user: `otro${timestamp}`,
-                dni: (timestamp + 1).toString(),
-            });
-
+            .set('Authorization', `Bearer ${tokenAdmin}`)
+            .send(professor);
+ 
         expect(res.statusCode).toBe(409);
+        await deleteProfessorTest(professorTest.id)
     });
 });
 
 describe("GET /api/professors/", ()=>{
     it('Should return all active professors', async() =>{
+        const tokenAdmin = await getToken(
+            process.env.USER_ADMIN_TEST,
+            process.env.PASSWORD_ADMIN_TEST
+        );
 
-        const res = await request(app).get('/api/professors/');
+        const res = await request(app)
+            .get('/api/professors/')
+            .set('Authorization', `Bearer ${tokenAdmin}`);
 
         expect(res.statusCode).toBe(200);
         expect(Array.isArray(res.body)).toBe(true);
     });
 
     it('Should not return password field', async()=>{
-        const res = await request(app).get('/api/professors/');
+        const tokenAdmin = await getToken(
+            process.env.USER_ADMIN_TEST,
+            process.env.PASSWORD_ADMIN_TEST
+        );
+
+        const res = await request(app)
+            .get('/api/professors/')
+            .set('Authorization', `Bearer ${tokenAdmin}`);
 
         expect(res.statusCode).toBe(200);
         
@@ -128,43 +164,62 @@ describe("GET /api/professors/", ()=>{
     });
 
     it('Should return only active professors', async()=>{
-        const res = await request(app).get('/api/professors/');
+        const tokenAdmin = await getToken(
+            process.env.USER_ADMIN_TEST,
+            process.env.PASSWORD_ADMIN_TEST
+        );
+
+        const res = await request(app)
+            .get('/api/professors/')
+            .set('Authorization', `Bearer ${tokenAdmin}`);
 
         expect(res.statusCode).toBe(200);
-        res.body.forEach(professor => expect(professor.estado).toBe('A'));
+        res.body.forEach(professor => expect(professor.status).toBe('A'));
     })
 });
 
 describe("GET /api/professors/:id", ()=>{
     it('Should return professor by id', async()=>{
-        const createRes = await request(app)
-            .post('/api/professors')
-            .send({
-                name: 'Juan',
-                surname: 'Perez',
-                dni: Date.now().toString(),
-                mail: `juan${Date.now()}@test.com`,
-                user: `juan${Date.now()}`,
-                password: '123456'
-            });
+        const tokenAdmin = await getToken(
+            process.env.USER_ADMIN_TEST,
+            process.env.PASSWORD_ADMIN_TEST
+        );
 
-        const professorId = createRes.body.id;
+        const professorTest = await createProfessorTest();
         
-        const res = await request(app).get(`/api/professors/${professorId}`);
+        const res = await request(app)
+            .get(`/api/professors/${professorTest.id}`)
+            .set('Authorization', `Bearer ${tokenAdmin}`);
 
         expect(res.statusCode).toBe(200);
         expect(res.body).toHaveProperty('id');
-        expect(res.body.id).toBe(professorId);
+        expect(res.body.id).toBe(professorTest.id);
+
+        await deleteProfessorTest(professorTest.id);
     });
 
     it('Should fail if professor does not exist', async()=>{
-        const res = await request(app).get('/api/professors/999999');
+        const tokenAdmin = await getToken(
+            process.env.USER_ADMIN_TEST,
+            process.env.PASSWORD_ADMIN_TEST
+        );
+
+        const res = await request(app)
+            .get('/api/professors/999999')
+            .set('Authorization', `Bearer ${tokenAdmin}`);
 
         expect(res.statusCode).toBe(404);
     });
 
     it('Should fail if id is not a number', async()=>{
-        const res = await request(app).get('/api/professors/abc');
+        const tokenAdmin = await getToken(
+            process.env.USER_ADMIN_TEST,
+            process.env.PASSWORD_ADMIN_TEST
+        );
+
+        const res = await request(app)
+            .get('/api/professors/abc')
+            .set('Authorization', `Bearer ${tokenAdmin}`);
 
         expect(res.statusCode).toBe(400);
     });
@@ -172,40 +227,49 @@ describe("GET /api/professors/:id", ()=>{
 
 describe("PUT /api/professors/:id", ()=>{
     it('Should update professor successfully', async()=>{
-        const createRes = await request(app)
-            .post('/api/professors')
-            .send({
-                name: 'Juan',
-                surname: 'Perez',
-                dni: Date.now().toString(),
-                mail: `juan${Date.now()}@test.com`,
-                user: `juan${Date.now()}`,
-                password: '123456'
-            });
+        const tokenAdmin = await getToken(
+            process.env.USER_ADMIN_TEST,
+            process.env.PASSWORD_ADMIN_TEST
+        );
 
-        const professorId = createRes.body.id;
+        const professorTest = await createProfessorTest();
 
         const res = await request(app)
-            .put(`/api/professors/${professorId}`)
+            .put(`/api/professors/${professorTest.id}`)
+            .set('Authorization', `Bearer ${tokenAdmin}`)
             .send({
-                name: 'Juan Updated',
-                surname: 'Perez',
-                dni : Date.now().toString(),
-                mail: `juan${Date.now()}Up@test.com`,
-                user: `juan${Date.now()}Up`,
+                user: `juanUpdate`,
             });
-
-        expect(res.statusCode).toBe(200);       
+        
+        expect(res.statusCode).toBe(200);    
+        
+        await deleteProfessorTest(professorTest.id);
     });
 
     it('Should fail if id is not a number', async()=>{
-        const res =  await request(app).put('/api/professors/abv').send({});
+        const tokenAdmin = await getToken(
+            process.env.USER_ADMIN_TEST,
+            process.env.PASSWORD_ADMIN_TEST
+        );
+
+        const res =  await request(app)
+            .put('/api/professors/abv')
+            .set('Authorization', `Bearer ${tokenAdmin}`)
+            .send({});
 
         expect(res.statusCode).toBe(400);
     })
 
     it('Should fail if professor does not exist', async()=>{
-        const res =  await request(app).put('/api/professors/9999999').send({});
+        const tokenAdmin = await getToken(
+            process.env.USER_ADMIN_TEST,
+            process.env.PASSWORD_ADMIN_TEST
+        );
+
+        const res =  await request(app)
+            .put('/api/professors/9999999')
+            .set('Authorization', `Bearer ${tokenAdmin}`)
+            .send({});
 
         expect(res.statusCode).toBe(404);
     })
@@ -213,25 +277,65 @@ describe("PUT /api/professors/:id", ()=>{
 
 describe("PATCH /api/professors/:id/deactivate", ()=>{
     it('Should deactivate professor', async()=>{
-        const res = await request(app).patch('/api/professors/28/deactivate');
+        const tokenAdmin = await getToken(
+            process.env.USER_ADMIN_TEST,
+            process.env.PASSWORD_ADMIN_TEST
+        );
+
+        const professorTest = await createProfessorTest();
+
+        const res = await request(app)
+            .patch(`/api/professors/${professorTest.id}/deactivate`)
+            .set('Authorization', `Bearer ${tokenAdmin}`);
 
         expect(res.statusCode).toBe(200);
+
+        await deleteProfessorTest(professorTest.id);
     });
 
     it('Should fail if professor is already deactivate', async()=>{
-        const res = await request(app).patch('/api/professors/28/deactivate');
+        const tokenAdmin = await getToken(
+            process.env.USER_ADMIN_TEST,
+            process.env.PASSWORD_ADMIN_TEST
+        );
+
+        const professorTest = await createProfessorTest();
+
+        await request(app)
+            .patch(`/api/professors/${professorTest.id}/deactivate`)
+            .set('Authorization', `Bearer ${tokenAdmin}`);
+
+        const res = await request(app)
+            .patch(`/api/professors/${professorTest.id}/deactivate`)
+            .set('Authorization', `Bearer ${tokenAdmin}`);
 
         expect(res.statusCode).toBe(409);
+
+        await deleteProfessorTest(professorTest.id);
     });
 
     it('Should fail if id is not a number', async()=>{
-        const res = await request(app).patch('/api/professors/abc/deactivate');
+        const tokenAdmin = await getToken(
+            process.env.USER_ADMIN_TEST,
+            process.env.PASSWORD_ADMIN_TEST
+        );
+
+        const res = await request(app)
+            .patch('/api/professors/abc/deactivate')
+            .set('Authorization', `Bearer ${tokenAdmin}`);
         
         expect(res.statusCode).toBe(400);
     });
 
     it('Should fail if professor does not exist', async()=>{
-        const res = await request(app).patch('/api/professors/999/deactivate');
+        const tokenAdmin = await getToken(
+            process.env.USER_ADMIN_TEST,
+            process.env.PASSWORD_ADMIN_TEST
+        );
+
+        const res = await request(app)
+            .patch('/api/professors/9999/deactivate')
+            .set('Authorization', `Bearer ${tokenAdmin}`);
 
         expect(res.statusCode).toBe(404);
     });
@@ -239,25 +343,65 @@ describe("PATCH /api/professors/:id/deactivate", ()=>{
 
 describe("PATCH /api/professors/:id/activate", ()=>{
     it('Should activate professor', async()=>{
-        const res = await request(app).patch('/api/professors/27/activate');
+        const tokenAdmin = await getToken(
+            process.env.USER_ADMIN_TEST,
+            process.env.PASSWORD_ADMIN_TEST
+        );
+
+        const professorTest = await createProfessorTest();
+
+        await request(app)
+            .patch(`/api/professors/${professorTest.id}/deactivate`)
+            .set('Authorization', `Bearer ${tokenAdmin}`);
+
+        const res = await request(app)
+            .patch(`/api/professors/${professorTest.id}/activate`)
+            .set('Authorization', `Bearer ${tokenAdmin}`);
 
         expect(res.statusCode).toBe(200);
+
+        await deleteProfessorTest(professorTest.id);
     });
 
     it('Should fail if professor is already activate', async()=>{
-        const res = await request(app).patch('/api/professors/27/activate');
+        const tokenAdmin = await getToken(
+            process.env.USER_ADMIN_TEST,
+            process.env.PASSWORD_ADMIN_TEST
+        );
+
+        const professorTest = await createProfessorTest();
+
+        const res = await request(app)
+            .patch(`/api/professors/${professorTest.id}/activate`)
+            .set('Authorization', `Bearer ${tokenAdmin}`);
 
         expect(res.statusCode).toBe(409);
+
+        await deleteProfessorTest(professorTest.id);
     });
 
     it('Should fail if id is not a number', async()=>{
-        const res = await request(app).patch('/api/professors/abc/activate');
+        const tokenAdmin = await getToken(
+            process.env.USER_ADMIN_TEST,
+            process.env.PASSWORD_ADMIN_TEST
+        );
+
+        const res = await request(app)
+            .patch('/api/professors/abc/activate')
+            .set('Authorization', `Bearer ${tokenAdmin}`);
         
         expect(res.statusCode).toBe(400);
     });
 
     it('Should fail if professor does not exist', async()=>{
-        const res = await request(app).patch('/api/professors/999/activate');
+        const tokenAdmin = await getToken(
+            process.env.USER_ADMIN_TEST,
+            process.env.PASSWORD_ADMIN_TEST
+        );
+
+        const res = await request(app)
+            .patch('/api/professors/9999/activate')
+            .set('Authorization', `Bearer ${tokenAdmin}`);
 
         expect(res.statusCode).toBe(404);
     });
@@ -265,45 +409,103 @@ describe("PATCH /api/professors/:id/activate", ()=>{
 
 describe("PATCH /api/professors/:id/password", ()=>{
     it('Should update password successfully', async()=>{
-        const res = await request(app).patch('/api/professors/27/password')
-            .send({password : '123456'});
+        const tokenAdmin = await getToken(
+            process.env.USER_ADMIN_TEST,
+            process.env.PASSWORD_ADMIN_TEST
+        );
+
+        const professorTest = await createProfessorTest();
+
+        const res = await request(app)
+            .patch(`/api/professors/${professorTest.id}/password`)
+            .set('Authorization', `Bearer ${tokenAdmin}`)
+            .send({password : '123abc'});
 
         expect(res.statusCode).toBe(200);
+
+        await deleteProfessorTest(professorTest.id);
     });
 
     it('Should fail if id is not a number', async()=>{
-        const res = await request(app).patch('/api/professors/abc/password')
-            .send({password : '123456'});
+        const tokenAdmin = await getToken(
+            process.env.USER_ADMIN_TEST,
+            process.env.PASSWORD_ADMIN_TEST
+        );
+
+        const res = await request(app)
+            .patch('/api/professors/abc/password')
+            .set('Authorization', `Bearer ${tokenAdmin}`)
+            .send({password : '123abc'});
         
         expect(res.statusCode).toBe(400);
     });
 
     it('Should fail if professor does not exist', async()=>{
-        const res = await request(app).patch('/api/professors/9999/password')
-            .send({password : '123456'});
+        const tokenAdmin = await getToken(
+            process.env.USER_ADMIN_TEST,
+            process.env.PASSWORD_ADMIN_TEST
+        );
+
+        const res = await request(app)
+            .patch('/api/professors/9999/password')
+            .set('Authorization', `Bearer ${tokenAdmin}`)
+            .send({password : '123abc'});
 
         expect(res.statusCode).toBe(404);
     });
 
     it('Should fail if password is missing', async()=>{
-        const res = await request(app).patch('/api/professors/26/password')
+        const tokenAdmin = await getToken(
+            process.env.USER_ADMIN_TEST,
+            process.env.PASSWORD_ADMIN_TEST
+        );
+
+        const professorTest = await createProfessorTest();
+
+        const res = await request(app)
+            .patch(`/api/professors/${professorTest.id}/password`)
+            .set('Authorization', `Bearer ${tokenAdmin}`)
             .send({});
 
         expect(res.statusCode).toBe(400);
+
+        await deleteProfessorTest(professorTest.id);
     });
 
     it('Should fail if password is too short', async()=>{
-        const res = await request(app).patch('/api/professors/26/password')
+        const tokenAdmin = await getToken(
+            process.env.USER_ADMIN_TEST,
+            process.env.PASSWORD_ADMIN_TEST
+        );
+
+        const professorTest = await createProfessorTest();
+
+        const res = await request(app)
+            .patch(`/api/professors/${professorTest.id}/password`)
+            .set('Authorization', `Bearer ${tokenAdmin}`)
             .send({password: '123'});
 
         expect(res.statusCode).toBe(400);
+
+        await deleteProfessorTest(professorTest.id);
     });
 
     it('Should fail if password is too long', async()=>{
-        const res = await request(app).patch('/api/professors/26/password')
+        const tokenAdmin = await getToken(
+            process.env.USER_ADMIN_TEST,
+            process.env.PASSWORD_ADMIN_TEST
+        );
+
+        const professorTest = await createProfessorTest();
+
+        const res = await request(app)
+            .patch(`/api/professors/${professorTest.id}/password`)
+            .set('Authorization', `Bearer ${tokenAdmin}`)
             .send({password: '1234567890123456789012345678901234567890123456789012345678901234'});
 
         expect(res.statusCode).toBe(400);
+
+        await deleteProfessorTest(professorTest.id);
     });
 
 });

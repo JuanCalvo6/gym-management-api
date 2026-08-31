@@ -2,10 +2,10 @@ const enrollmentService = require('./enrollmentService');
 
 const createEnrollment = async(req, res) =>{
     try {
-        const clientId = req.params.id;
-        const proffesorId = req.user.id;
+        const idClient = req.params.id;
+        const idProfessor = req.user.id;
 
-        const enrollment = await enrollmentService.createEnrollment(clientId, proffesorId, req.body);
+        const enrollment = await enrollmentService.createEnrollment(idClient, idProfessor, req.body);
 
         res.status(201).json(enrollment);
 

@@ -2,7 +2,7 @@ const pool = require('../../config/db');
 
 const findExistingMembership = async(name) =>{
     const [rows] = await pool.query(
-        `SELECT nombre
+        `SELECT nombre AS name
          FROM Pases
          WHERE nombre = ?`,
          [name]
@@ -41,7 +41,11 @@ const createMembership = async(membershipData) =>{
 
 const getAllMemberships = async()=>{
     const [rows] = await pool.query(
-        `SELECT nombre, horaInicio, horaFin, precio, estado
+        `SELECT nombre AS name, 
+                horaInicio AS start, 
+                horaFin AS end, 
+                precio AS price, 
+                estado AS status
          FROM Pases
          WHERE estado = 'A'
          ORDER BY nombre`
@@ -52,7 +56,11 @@ const getAllMemberships = async()=>{
 
 const getMembershipById = async(id)=>{
     const [rows] = await pool.query(
-        `SELECT nombre, horaInicio, horaFin, precio, estado
+        `SELECT nombre AS name, 
+                horaInicio AS start, 
+                horaFin AS end, 
+                precio AS price, 
+                estado AS status
          FROM Pases
          WHERE idPase = ?`,
          [id]

@@ -16,7 +16,7 @@ describe('createRoutineLine', ()=>{
 
         routineService.getRoutineById.mockResolvedValue({
             id : 1,
-            idCliente : 1
+            idClient : 1
         });
 
         routineLineModel.createRoutineLine.mockResolvedValue({id : 1});
@@ -90,7 +90,7 @@ describe('getRoutineLineById', ()=>{
 describe('updateRoutineLine', ()=>{
     it('Should update routine line successfully', async()=>{
         const routineLineData = {
-            repetitios : '20'
+            repetitions : '20'
         };
 
         routineLineModel.getRoutineLineById.mockResolvedValue({id : 1});

@@ -17,18 +17,20 @@ const createMembershipTest = async(token)=>{
     return res.body;
 };
 
-const createMembershipWithScheduleTest = async (token, start, end) => {
-    const res = await request(app)
-        .post('/api/memberships/')
-        .set('Authorization', `Bearer ${token}`)
-        .send({
-            name: 'testMembership',
-            start: start,
-            end: end,
-            price: 12000
-        });
+const createMembershipWithScheduleTest = async (start, end) => {
+    const [result] = await pool.query(
+        `INSERT INTO Pases (nombre, horaInicio, horaFin, precio, estado)
+         VALUES (?, ?, ?, ?, ?)`,
+         [
+            'testMembership',
+            start,
+            end,
+            12000,
+            'A'
+        ]
+    );
 
-    return res.body;
+    return {id: result.insertId};
 };
 
 const deleteMembershipTest = async(id) =>{

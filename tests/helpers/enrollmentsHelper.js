@@ -8,7 +8,7 @@ const createEnrollmentTest = async(idClient, tokenProfessor, membershipId)=>{
             .post(`/api/clients/${idClient}/enrollments`)
             .set('Authorization', `Bearer ${tokenProfessor}`)
             .send({
-                membershipId : membershipId,
+                idMembership : membershipId,
                 startDate : '2025-02-01',
                 endDate : '2025-03-01'
             });
@@ -16,12 +16,12 @@ const createEnrollmentTest = async(idClient, tokenProfessor, membershipId)=>{
     return res.body;
 };
 
-const createEnrollmentWithScheduleTest = async(idClient, tokenProfessor, membershipId, startDate, endDate)=>{
+const createEnrollmentWithScheduleTest = async(idClient, tokenProfessor, idMembership, startDate, endDate)=>{
     const res = await request(app)
             .post(`/api/clients/${idClient}/enrollments`)
             .set('Authorization', `Bearer ${tokenProfessor}`)
             .send({
-                membershipId : membershipId,
+                idMembership : idMembership,
                 startDate : formatDateToSQL(startDate),
                 endDate : formatDateToSQL(endDate)
             });

@@ -17,19 +17,19 @@ describe('createAttendance', ()=>{
 
         clientService.getClientById.mockResolvedValue({
             id : 1,
-            estado : 'A'
+            status : 'A'
         });
 
         enrollmentService.getCurrentEnrollmentByClient.mockResolvedValue({
             id : 1,
-            idPase : 3
+            idMembership : 3
         });
 
         membershipService.getMembershipById.mockResolvedValue({
             id : 3,
-            horaInicio : '08:00',
-            horaFin : '12:00',
-            precio : 12000
+            start : '08:00',
+            end : '12:00',
+            price : 12000
         });
 
         attendanceModel.createAttendance.mockResolvedValue({id : 1});
@@ -45,7 +45,7 @@ describe('createAttendance', ()=>{
     it('Should fail if client is inactive', async()=>{
         clientService.getClientById.mockResolvedValue({
             id : 1,
-            estado : 'B'
+            status : 'B'
         });
 
         await expect( attendanceService.createAttendance(1)
@@ -55,7 +55,7 @@ describe('createAttendance', ()=>{
     it('Should fail if client does not have enrollments active', async()=>{
         clientService.getClientById.mockResolvedValue({
             id : 1,
-            estado : 'A'
+            status : 'A'
         });
 
         enrollmentService.getCurrentEnrollmentByClient.mockResolvedValue(null);
@@ -70,19 +70,19 @@ describe('createAttendance', ()=>{
 
         clientService.getClientById.mockResolvedValue({
             id : 1,
-            estado : 'A'
+            status : 'A'
         });
 
         enrollmentService.getCurrentEnrollmentByClient.mockResolvedValue({
             id : 1,
-            idPase : 3
+            idMembership : 3
         });
 
         membershipService.getMembershipById.mockResolvedValue({
             id : 3,
-            horaInicio : '08:00',
-            horaFin : '12:00',
-            precio : 12000
+            start : '08:00',
+            end : '12:00',
+            price : 12000
         });
 
         await expect(attendanceService.createAttendance(1)
@@ -97,18 +97,18 @@ describe('getAllAttendances',()=>{
         const attendances = [
             {
                 id : 1,
-                idCliente : 1,
-                fecha : '2026-08-19T10:00:00'
+                idClient : 1,
+                date : '2026-08-19T10:00:00'
             },
             {
                 id : 2,
-                idCliente : 1,
-                fecha : '2026-08-20T10:00:00'
+                idClient : 1,
+                date : '2026-08-20T10:00:00'
             },
             {
                 id : 3,
-                idCliente : 2,
-                fecha : '2026-08-20T18:00:00'
+                idClient : 2,
+                date : '2026-08-20T18:00:00'
             }
         ];
 
@@ -121,24 +121,24 @@ describe('getAllAttendances',()=>{
     });
 });
 
-describe.only('getAttendancesByClient',()=>{
+describe('getAttendancesByClient',()=>{
     it('Should return all attendances by client', async()=>{
         const attendances = [
             {
                 id : 1,
-                idCliente : 1,
-                fecha : '2026-08-19T10:00:00'
+                idClient : 1,
+                date : '2026-08-19T10:00:00'
             },
             {
                 id : 2,
-                idCliente : 1,
-                fecha : '2026-08-20T10:00:00'
+                idClient : 1,
+                date : '2026-08-20T10:00:00'
             }
         ];
 
         clientService.getClientById.mockResolvedValue({
             id : 1,
-            estado : 'A'
+            status : 'A'
         });
 
         attendanceModel.getAttendancesByClient.mockResolvedValue(attendances);

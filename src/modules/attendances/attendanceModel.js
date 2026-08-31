@@ -12,7 +12,9 @@ const createAttendance = async(idClient, date)=>{
 
 const getAllAttendances = async()=>{
     const [rows] = await pool.query(
-        `SELECT idAsistencia AS id, idCliente, fecha
+        `SELECT idAsistencia AS id, 
+                idCliente AS idClient, 
+                fecha AS date
          FROM Asistencias
          ORDER BY idCliente, fecha`
     );
@@ -22,7 +24,9 @@ const getAllAttendances = async()=>{
 
 const getAttendancesByClient = async(idClient)=>{
     const [rows] = await pool.query(
-        `SELECT idAsistencia AS id, idCliente, fecha
+        `SELECT idAsistencia AS id, 
+                idCliente AS idClient, 
+                fecha AS date
         FROM Asistencias 
         WHERE idCliente = ?
         ORDER BY fecha`,

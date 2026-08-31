@@ -5,12 +5,11 @@ const AppError = require('../../utils/AppError');
 const createProfessor = async (professorData)=>{
 
     const existingProfessor = await professorModel.findExistingProfessor(professorData.user,professorData.dni,professorData.mail);
-
     if(existingProfessor){
-        if(existingProfessor.usuario === professorData.user)
+        if(existingProfessor.user === professorData.user)
             throw new AppError('Username already exists', 409);
 
-        if(existingProfessor.dni === professorData.dni)
+        if(String(existingProfessor.dni) === String(professorData.dni))
             throw new AppError('DNI already exists', 409);
 
         if(existingProfessor.mail === professorData.mail)
@@ -48,7 +47,7 @@ const getProfessorById = async (id) =>{
 };
 
 const updateProfessor = async (id, professorData) =>{
-    await getProfessorById(id);
+    const professor = await getProfessorById(id);
     
     const duplicatedProfessor = await professorModel.findProfessorByUniqueData(
         professorData.user,
@@ -60,7 +59,17 @@ const updateProfessor = async (id, professorData) =>{
     if(duplicatedProfessor)
         throw new AppError('Professor data already exists', 409);
 
-    const professor =await professorModel.updateProfessor(id, professorData);
+    const updateData = {
+        name : professorData.name ?? professor.name,
+        surname : professorData.surname ?? professor.surname,
+        dni : professorData.dni ?? professor.dni,
+        phone : professorData.phone ?? professor.phone,
+        address : professorData.address ?? professor.address,
+        mail :  professorData.mail ?? professor.mail,
+        user : professorData.user ?? professor.user
+    };
+
+    const professorUpdate =await professorModel.updateProfessor(id, updateData);
 
     return professor;
 };
@@ -68,7 +77,7 @@ const updateProfessor = async (id, professorData) =>{
 const deactivateProfessor = async(id) =>{
     const professor = await getProfessorById(id);
 
-    if(professor.estado === 'B')
+    if(professor.status === 'B')
         throw new AppError('Professor is already inactive', 409);
 
     await professorModel.updateProfessorStatus(id, 'B');
@@ -79,7 +88,7 @@ const deactivateProfessor = async(id) =>{
 const activateProfessor = async(id) =>{
     const professor = await getProfessorById(id);
 
-    if(professor.estado === 'A')
+    if(professor.status === 'A')
         throw new AppError('Professor is already active', 409);
 
     await professorModel.updateProfessorStatus(id, 'A');

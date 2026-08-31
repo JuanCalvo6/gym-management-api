@@ -8,7 +8,7 @@ const {timeToMinutes} = require('../../utils/timeUtils');
 
 const createAttendance = async(idClient)=>{
     const existingClient = await clientService.getClientById(idClient);
-    if(existingClient.estado === 'B')
+    if(existingClient.status === 'B')
         throw new AppError('Client is inactive', 409);
 
     const existingEnrollment = await enrollmentService.getCurrentEnrollmentByClient(idClient);
@@ -16,10 +16,10 @@ const createAttendance = async(idClient)=>{
     if(!existingEnrollment)
         throw new AppError('Client does not have enrollments active', 409);
 
-    const membership = await membershipService.getMembershipById(existingEnrollment.idPase);
+    const membership = await membershipService.getMembershipById(existingEnrollment.idMembership);
 
-    const start = timeToMinutes(membership.horaInicio);
-    const end = timeToMinutes(membership.horaFin);
+    const start = timeToMinutes(membership.start);
+    const end = timeToMinutes(membership.end);
     const now = new Date();
     const current = now.getHours()*60 + now.getMinutes();
 

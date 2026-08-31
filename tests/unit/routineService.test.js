@@ -42,16 +42,16 @@ describe('getRoutinesByClient', ()=>{
         const routines = [
             {
                 id : 1,
-                idCliente : 1,
-                nombre : 'Monday',
-                estado : 'A'
+                idClient : 1,
+                name : 'Monday',
+                status : 'A'
             },
             {
                 id : 10,
-                idCliente : 1,
-                nombre : 'Special',
-                observaciones : 'Rutina especial',
-                estado : 'B'
+                idClient : 1,
+                name : 'Special',
+                notes : 'Rutina especial',
+                status : 'B'
             }
         ]
 
@@ -69,10 +69,10 @@ describe('getRoutineById', ()=>{
     it('Should return routine by id', async()=>{
         const routine = {
             id : 1,
-            idCliente : 1,
-            nombre : 'Rutina',
-            observaciones : 'Ninguna',
-            estado : 'A'
+            idClient : 1,
+            name : 'Rutina',
+            notes : 'Ninguna',
+            status : 'A'
         };
 
         routineModel.getRoutineById.mockResolvedValue(routine);
@@ -129,7 +129,7 @@ describe('deactivateRoutine', ()=>{
     it('Should deactivate routine', async()=>{
         routineModel.getRoutineById.mockResolvedValue({
             id : 1,
-            estado : 'A'
+            status : 'A'
         });
 
         routineModel.updateRoutineStatus.mockResolvedValue();
@@ -144,7 +144,7 @@ describe('deactivateRoutine', ()=>{
     it('Should fail if routine is already deactivate', async()=>{
         routineModel.getRoutineById.mockResolvedValue({
             id : 1,
-            estado : 'B'
+            status : 'B'
         });
 
         await expect(routineService.deactivateRoutine(1)
@@ -156,7 +156,7 @@ describe('activateRoutine', ()=>{
     it('Should activate routine', async()=>{
         routineModel.getRoutineById.mockResolvedValue({
             id : 1,
-            estado : 'B'
+            status : 'B'
         });
 
         routineModel.updateRoutineStatus.mockResolvedValue();
@@ -171,7 +171,7 @@ describe('activateRoutine', ()=>{
     it('Should fail if routine is already activate', async()=>{
         routineModel.getRoutineById.mockResolvedValue({
             id : 1,
-            estado : 'A'
+            status : 'A'
         });
 
         await expect(routineService.activateRoutine(1)

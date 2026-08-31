@@ -44,7 +44,15 @@ const createClient = async (clientData) =>{
 
 const getAllClients = async() =>{
     const [rows] = await pool.query(
-        `SELECT idCliente AS id, nombres, apellidos, tipoDni, dni, telefono, direccion, mail, estado
+        `SELECT idCliente AS id,
+                nombres AS name,
+                apellidos AS surname,
+                tipoDni AS documentType, 
+                dni, 
+                telefono AS phone, 
+                direccion AS address, 
+                mail, 
+                estado AS status
          FROM Clientes
          WHERE estado = 'A'
          ORDER BY  estado, apellidos, nombres`
@@ -55,7 +63,15 @@ const getAllClients = async() =>{
 
 const getClientById = async(id)=>{
     const [rows] = await pool.query(
-        `SELECT idCliente AS id, nombres, apellidos, tipoDni, dni, telefono, direccion, mail, estado
+        `SELECT idCliente AS id,
+                nombres AS name,
+                apellidos AS surname,
+                tipoDni AS documentType, 
+                dni, 
+                telefono AS phone, 
+                direccion AS address, 
+                mail, 
+                estado AS status
          FROM Clientes
          WHERE idCliente = ?`,
          [id]

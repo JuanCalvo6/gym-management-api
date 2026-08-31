@@ -22,7 +22,7 @@ describe('createMembership',()=>{
     });
 
     it('Should fails if membership is already exists', async()=>{
-        membershipModel.findExistingMembership.mockResolvedValue({nombre : 'membership1'});
+        membershipModel.findExistingMembership.mockResolvedValue({name : 'membership1'});
 
         await expect(membershipService.createMembership({
             name : "membership1",
@@ -40,17 +40,17 @@ describe('getAllMemberships', ()=>{
         const mockMemberships = [
             {
                 id: 1,
-                nombre : 'member1',
-                horaInicio : '08:00',
-                horaFin : '12:00',
-                precio: 10000
+                name : 'member1',
+                start : '08:00',
+                end : '12:00',
+                price: 10000
             },
             {
                 id: 2,
-                nombre : 'member1',
-                horaInicio : '12:00',
-                horaFin : '20:00',
-                precio: 10000
+                name : 'member1',
+                start : '12:00',
+                end : '20:00',
+                price: 10000
             }
         ];
 
@@ -68,10 +68,10 @@ describe('getMembershipById', ()=>{
     it('Should return membership by id', async()=>{
         const membership = {
             id : 1,
-            nombre : 'member1',
-            horaInicio : '08:00',
-            horaFin : '12:00',
-            precio : 15000
+            name : 'member1',
+            start : '08:00',
+            end : '12:00',
+            price : 15000
         };
 
         membershipModel.getMembershipById.mockResolvedValue(membership);
@@ -159,7 +159,10 @@ describe('updateMembership', ()=>{
 
 describe('deactivateMembership', ()=>{
     it('Should deactivate membership', async()=>{
-        membershipModel.getMembershipById.mockResolvedValue({id : 1});
+        membershipModel.getMembershipById.mockResolvedValue({
+            id : 1 ,
+            status : 'A'
+        });
         membershipModel.updateMembershipStatus.mockResolvedValue();
 
         const result = await membershipService.deactivateMembership(1);
@@ -172,7 +175,7 @@ describe('deactivateMembership', ()=>{
     it('Should fail if membership is already deactivate', async()=>{
         membershipModel.getMembershipById.mockResolvedValue({
             id :  1,
-            estado : 'B'
+            status : 'B'
         });
 
         await expect(membershipService.deactivateMembership(1))
@@ -182,7 +185,10 @@ describe('deactivateMembership', ()=>{
 
 describe('activateMembership', ()=>{
     it('Should activate membership', async()=>{
-        membershipModel.getMembershipById.mockResolvedValue({id : 1});
+        membershipModel.getMembershipById.mockResolvedValue({
+            id : 1,
+            status : 'B'
+        });
         membershipModel.updateMembershipStatus.mockResolvedValue();
 
         const result = await membershipService.activateMembership(1);
@@ -195,7 +201,7 @@ describe('activateMembership', ()=>{
     it('Should fail if membership is already activate', async()=>{
         membershipModel.getMembershipById.mockResolvedValue({
             id :  1,
-            estado : 'A'
+            status : 'A'
         });
 
         await expect(membershipService.activateMembership(1))

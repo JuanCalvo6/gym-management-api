@@ -2,18 +2,18 @@ const AppError = require('../../utils/AppError');
 
 const validateEnrollment = (req, res, next) =>{
     const {
-        membershipId,
+        idMembership,
         startDate,
         endDate
     } = req.body;
 
     try {
         //required fields
-        if(!membershipId || !startDate || !endDate)
+        if(!idMembership || !startDate || !endDate)
             throw new AppError('Missing required fields', 400);
 
         //membership
-        if(!Number.isInteger(Number(membershipId)))
+        if(!Number.isInteger(Number(idMembership)))
             throw new AppError('Invalid membership id', 400);
 
         //Date

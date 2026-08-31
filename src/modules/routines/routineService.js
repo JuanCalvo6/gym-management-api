@@ -37,19 +37,24 @@ const getRoutineById =  async(id)=>{
 const updateRoutine = async(id, routineData)=>{
     const routine = await getRoutineById(id);
 
-    const existingRoutines = await routineModel.findRoutineByUniqueData(routine.idCliente, routineData.name);
+    const existingRoutines = await routineModel.findRoutineByUniqueData(routine.idClient, routineData.name);
     if(existingRoutines)
             throw new AppError('Routine name already exists', 409);
     
-    const result = await routineModel.updateRoutine(id, routineData);
+    const updateData = {
+        name : routineData.name ?? routine.name,
+        notes :  routineData.notes ?? routine.notes
+    };
 
-    return result;
+    const routineUpdate = await routineModel.updateRoutine(id, updateData);
+
+    return routineUpdate;
 };
 
 const deactivateRoutine = async(id)=>{
     const routine = await getRoutineById(id);
 
-    if(routine.estado === 'B')
+    if(routine.status === 'B')
         throw new AppError('Routine is already inactive', 409);
 
     await routineModel.updateRoutineStatus(id, 'B');
@@ -60,7 +65,7 @@ const deactivateRoutine = async(id)=>{
 const activateRoutine = async(id)=>{
     const routine = await getRoutineById(id);
 
-    if(routine.estado === 'A')
+    if(routine.status === 'A')
         throw new AppError('Routine is already active', 409);
 
     await routineModel.updateRoutineStatus(id, 'A');

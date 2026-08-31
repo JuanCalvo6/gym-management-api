@@ -157,7 +157,7 @@ describe('PUT /api/routine-lines/:id', ()=>{
                 repetitions : '15',
                 rest : '60"' 
             });
-
+        console.log(res.body);    
         expect(res.statusCode).toBe(200);
 
         await deleteRoutineLineTest(routineLineTest.id);

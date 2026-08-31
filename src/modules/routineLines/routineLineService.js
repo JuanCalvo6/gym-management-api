@@ -1,11 +1,12 @@
 const AppError = require('../../utils/AppError');
 const routineLineModel = require('./routineLineModel');
 const routineService = require('../routines/routineService');
+const { settings } = require('../../app');
 
 const createRoutineLine = async(idRoutine, routineLineData)=>{
     const routine = await routineService.getRoutineById(idRoutine);
 
-    const result = await routineLineModel.createRoutineLine(idRoutine, routine.idCliente, routineLineData);
+    const result = await routineLineModel.createRoutineLine(idRoutine, routine.idClient, routineLineData);
 
     return result;
 };
@@ -31,9 +32,17 @@ const getRoutineLineById = async(id)=>{
 };
 
 const updateRoutineLine = async(id, routineLineData)=>{
-    await getRoutineLineById(id);
+    const routineLine = await getRoutineLineById(id);
 
-    const result = await routineLineModel.updateRoutineLine(id, routineLineData);
+    const updateData = {
+        exercise : routineLineData.exercise ?? routineLine.exercise,
+        repetitions : routineLineData.repetitions ?? routineLine.repetitions,
+        sets : routineLineData.sets ?? routineLine.sets,
+        rest : routineLineData.rest ?? routineLine.rest
+
+    };
+
+    const result = await routineLineModel.updateRoutineLine(id, updateData);
 
     return result;
 };

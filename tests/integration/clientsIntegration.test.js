@@ -74,7 +74,6 @@ describe("POST /api/clients", ()=>{
                     address : 'calle test 12',
                     mail : 'cliente@test.com'
                 });
-        console.log(res.body);
         expect(res.statusCode).toBe(409);
         await deleteClientTest(firstClient.id);
     });
