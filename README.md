@@ -1,18 +1,27 @@
 # Gym Management API
+RESTful API for managing the operations of a gym, including authentication, professors, clients, memberships, enrollments, attendance records, workout routines, and routine exercises.
 
-REST API para la gestión de un gimnasio construido con Node.js y Express.
+The project was developed as a backend-focused application to practice and demonstrate REST API design, modular architecture, authentication and authorization, relational database management, business logic, and automated testing.
+
+---
+## Features
+- JWT-based authentication and authorization
+- Role-based access control for administrators and professors
+- Password hashing with bcryptjs
+- Modular backend architecture
+- MySQL relational database
+- Input validation through middleware
+- Business logic handled through service layers
+- Centralized application error handling
+- RESTful API endpoints
+- Unit testing with Jest and mocked dependencies
+- Integration testing with Jest and Supertest
+- Database integration testing
+- Test helpers for database setup and cleanup
 
 ---
 
-## Características
-- Autenticación con JWT
-- Password hashing con bcryptjs
-- Testing automatizado con Jest y Supertest
-- Arquitectura Modular
-- Conexión de DB MySQL
----
-
-## Tecnologias
+## Technologies
 - Node.js
 - Express
 - MySQL (mysql2)
@@ -20,146 +29,15 @@ REST API para la gestión de un gimnasio construido con Node.js y Express.
 - Bcryptjs
 - Jest
 - Supertest
+- Nodemon
 
 ---
 
-## Instalación
-Clonar el repositorio:
+## Project Architecture
 
-```bash
-git clone https://github.com/JuanCalvo6/gym-management-api.git
-```
+The application follows a modular layered architecture.
 
-Instalar dependencias:
-```bash
-npm install
-```
-
----
-
-## Variables de entorno
-Crear el archivo '.env' en el directorio raiz.
-
-```env
-JWT_SECRET=YOUR_SECRET_KEY  
-PORT=
-
-DB_HOST=
-DB_PORT=
-DB_USER=
-DB_PASSWORD=
-DB_NAME=
-```
-
----
-
-## Ejecutar el proyecto
-
-Modo desarrollo:
-
-```bash
-npm run dev
-```
-
-Modo producción:
-
-```bash
-npm run start
-```
-
----
-
-## Ejecutar tests
-
-Ejecutar todos los tests:
-```bash
-npm test
-```
-
-Verbose mode:
-
-```bash
-npm test -- --runInBand --verbose
-```
-
-Ejecutar tests de integración:
-
-```bash
-npm test authIntegration.test.js
-```
-
-Ejecutar tests unitarios:
-
-```bash
-npm test authService.test.js
-```
-
-## API Endpoints
-
-### Authentication 
-
-| Método | Endpoint | Descripcion |
-|---|---|---|
-|POST | `/api/auth/login` | login de usuario |
-|GET | `/api/auth/verify` | verificar JWT Token|
-|POST | `/api/auth/logout` | logout de usuario |
-
----
-### Professors 
-
-| Método | Endpoint | Descripcion |
-|---|---|---|
-|POST | `/api/professors` | Crear un profesor|
-|GET | `/api/professors` | Obtener todos los profesores|
-|GET | `/api/professors/:id` | Obtener un profesor por el id|
-|PUT | `/api/professors/:id` | Modificar un profesor|
-|PATCH | `/api/professors/:id/deactivate` | Cambiar el estado de un profesor (B)|
-|PATCH | `/api/professors/:id/activate` | Cambiar el estado de un profesor (A)|
-|PATCH | `/api/professors/:id/password` |Cambiar el password de un profesor|
-
----
-
-## Autenticación
-
-Rutas protegidas utilizando autenticación con JWT.
-
-Ejemplo de header:
-
-```http
-Authorization: Bearer YOUR_TOKER
-```
-### Login
-POST /api/auth/ login
-
-Request : 
-{
-    "user" : "admin",
-    "password" : "password"
-}
-
-Response:
-{
-    "id" : 1,
-    "type" : "admin",
-    "token" : "..."
-}
-
----
-
-## Profesores
-
-Rutas protegidas utilizando autenticación con JWT.
-
-Validación de roles para determinadas acciones. Solo un administrador puede:
-- Crear un profesor.
-- Listar todos los profesores.
-- Actualizar un profesor.
-- Cambiar el estado de un profesor.
-- Cambiar la contraseña de un profesor.
-
----
-
-## Estructura del Proyecto
+Each business module is responsible for its own routes, controllers, services, models, and validations.
 
 ```text
 src/
@@ -167,61 +45,453 @@ src/
 │   └── db.js
 │
 ├── middlewares/
-│   └── authMiddleware.js
+│   ├── validateRole.js
+│   └── validateToken.js
 │
 ├── modules/
+│   ├── attendances/
 │   ├── auth/
-│   │   ├── authController.js
-│   │   ├── authModel.js
-│   │   ├── authRouter.js
-│   │   ├── authService.js
-│   │   └── authValidation.js
-│   └── professors/
-│       ├── passwordValidation.js
-│       ├── professorController.js
-│       ├── professorModel.js
-│       ├── professorRoutes.js
-│       ├── professorService.js
-│       └── professorValidation.js
+│   ├── clients/
+│   ├── enrollments/
+│   ├── memberships/
+│   ├── professors/
+│   ├── routineLines/
+│   └── routine/
 │
 ├── utils/
 │   ├── AppError.js
-│   └── jwtUtils.js
+│   ├── jwtUtils.js
+│   └── timeUtils.js
 │
 ├── app.js
-├── server.js
-
-test/
+└── server.js
 ```
---- 
 
-## Configuración DB
-Importar el archivo SQL ubicado en:
+A typical module follows this structure:
+```text
+module/ 
+├── controller 
+├── service 
+├── model 
+├── routes 
+└── validation
+```
+### Responsibilities
+#### Routes
+
+Define the available HTTP endpoints and apply the required middleware.
+
+#### Controllers
+
+Handle HTTP requests and responses.
+
+#### Services
+
+Contain business logic and coordinate operations between modules.
+
+#### Models
+
+Handle communication with the MySQL database.
+
+#### Validation
+
+Validate incoming request data before it reaches the business logic.
+
+---
+
+## Modules
+### Authentication
+Handles user login, logout, and JWT verification.
+
+The authentication system supports two user roles:
+
+- admin
+- professor
+
+The authenticated user's role is included in the authentication flow and is used to protect restricted resources.
+
+### Professors
+Administrators can manage professor accounts.
+
+Main operations include:
+
+- Create professor
+- List professors
+- Get professor by ID
+- Update professor
+- Activate/deactivate professor
+- Change professor password
+
+### Memberships
+Manages the membership plans available at the gym.
+
+Memberships contain:
+
+- Name
+- Start time
+- End time
+- Price
+- Status
+
+Memberships are used by enrollments to determine the plan assigned to a client.
+
+### Clients
+Manages gym clients and their personal information.
+
+Client management includes:
+
+- Create client
+- List clients
+- Get client by ID
+- Update client
+- Activate/deactivate client
+- Manage client enrollments
+- Manage client attendance records
+- Manage client routines
+
+### Enrollments
+Enrollments connect clients with memberships and professors.
+
+The enrollment system maintains historical records instead of directly replacing a client's membership.
+
+An enrollment contains:
+
+- Client
+- Professor
+- Membership
+- Start date
+- End date
+- Price
+- Status
+
+The service layer also validates date ranges and prevents overlapping enrollments for the same client.
+
+### Attendances
+Attendance records are associated with clients.
+
+When creating an attendance record, the application verifies:
+
+1. The client exists.
+2. The client is active.
+3. The client has a current enrollment.
+4. The membership associated with the current enrollment is valid.
+5. The current time falls within the membership's allowed schedule.
+
+The attendance timestamp is generated by the application.
+
+### Routines
+Clients can have multiple workout routines.
+
+A routine contains:
+
+- Name
+- Notes
+- Status
+- Client
+
+Routine names are unique per client according to the database constraints.
+
+Routines can be created, retrieved, updated, activated/deactivated, and deleted.
+
+### Routine Lines
+Routine lines represent the individual exercises belonging to a routine.
+
+A routine line contains:
+
+- Exercise
+- Repetitions
+- Sets
+- Rest
+- Routine
+- Client
+
+Routine lines can be created and listed through the routine resource and can also be individually retrieved, updated, or deleted.
+
+### Authentication & Authorization
+Protected endpoints require a valid JWT token.
+
+The token must be sent using the Authorization header:
+```http
+Authorization: Bearer YOUR_TOKER
+```
+
+Example login request:
+```http
+{
+    "user" : "admin",
+    "password" : "password"
+}
+```
+
+Successful authentication returns information similar to:
+```http
+{
+    "id" : 1,
+    "type" : "admin",
+    "token" : "..."
+}
+```
+
+Role-based middleware restricts access to operations according to the authenticated user's role.
+
+For example, administrative operations are restricted to administrators, while client-related operations are handled by professors.
+
+---
+
+## API Endpoints
+### Authentication 
+
+| Method | Endpoint | Description |
+|---|---|---|
+|POST | `/api/auth/login` | Authenticate a user |
+|POST | `/api/auth/logout` | logout 
+|GET | `/api/auth/verify` | Verify JWT token||
+
+---
+### Professors 
+
+| Method | Endpoint | Description |
+|---|---|---|
+|POST | `/api/professors` | Create professor|
+|GET | `/api/professors` | Get all professors|
+|GET | `/api/professors/:id` | Get professor by ID|
+|PUT | `/api/professors/:id` | Update professor|
+|PATCH | `/api/professors/:id/deactivate` | Deactivate professor|
+|PATCH | `/api/professors/:id/activate` | Activate professor|
+|PATCH | `/api/professors/:id/password` |Change professor password|
+
+---
+
+### Memberships
+
+| Method | Endpoint | Description |
+|---|---|---|
+|POST | `/api/memberships` | Create membership|
+|GET | `/api/memberships` | Get all memberships|
+|GET | `/api/memberships/:id` | Get membership by ID|
+|PUT | `/api/memberships/:id` | Update membership|
+|PATCH | `/api/memberships/:id/deactivate` | Deactivate membership|
+|PATCH | `/api/memberships/:id/activate` | Activate membership|
+
+---
+
+### Clients
+
+| Method | Endpoint | Description |
+|---|---|---|
+|POST | `/api/clients` | Create client|
+|POST | `/api/clients/:id/enrollments` | Create client enrollment|
+|POST | `/api/clients/:id/attendances` | Register client attendance|
+|POST | `/api/clients/:id/routines` | Create routine for client|
+|GET | `/api/clients` | Get all clients|
+|GET | `/api/clients/:id` | Get client by ID|
+|GET | `/api/clients/:id/enrollments` | Get client's enrollments|
+|GET | `/api/clients/:id/attendances` | Get client's attendance records|
+|GET | `/api/clients/:id/routines` | Get client's routines|
+|PUT | `/api/clients/:id` | Update client|
+|PATCH | `/api/clients/:id/deactivate` | Deactivate client|
+|PATCH | `/api/clients/:id/activate` | Activate client|
+
+---
+
+### Enrollments
+
+| Method | Endpoint | Description |
+|---|---|---|
+|GET | `/api/enrollments` | Get all enrollments|
+|GET | `/api/enrollments/:id` | Get enrollment by ID|
+|PATCH | `/api/enrollments/:id/deactivate` | Deactivate enrollment|
+|PATCH | `/api/enrollments/:id/activate` | Activate enrollment|
+
+---
+
+### Attendances
+
+| Method | Endpoint | Description |
+|---|---|---|
+|GET | `/api/attendances` | Get all attendance records|
+
+---
+
+### Routines
+
+| Method | Endpoint | Description |
+|---|---|---|
+|POST | `/api/routines/:id/lines` | Create routine line|
+|GET | `/api/routines/:id` | Get routine by ID|
+|GET | `/api/routines/:id/lines` | Get routine lines by routine|
+|PUT | `/api/routines/:id` | Update routine|
+|PATCH | `/api/routines/:id/deactivate` | Deactivate routine|
+|PATCH | `/api/routines/:id/activate` | Activate routine|
+|DELETE | `/api/routines/:id` |Delete routine|
+
+---
+
+### Routines
+
+| Method | Endpoint | Description |
+|---|---|---|
+|GET | `/api/routine-lines/:id` | Get routine line by ID|
+|PUT | `/api/routine-lines/:id` | Update routine line|
+|DELETE | `/api/routine-lines/:id` |Delete routine line|
+
+---
+
+## Database
+The project uses MySQL as its relational database.
+
+The database schema is available in:
 
 ```text
 database/gimnasio.sql
 ```
+
+The existing database structure was intentionally preserved and the application logic was designed around the provided relational model.
+
 --- 
 
-## Testing
-El proyecto incluye:
-- Tests de integración utilizando Supertest
-- Tests unitarios utilizando Jest mocks
-
-### Test de integración 
-Los tests de integración validan el flujo completo de la solicitud:
-```text
-Route → Controller → Service → Model → MySQL
+## Installation
+Clone the repository:
+```bash
+git clone https://github.com/JuanCalvo6/gym-management-api.git
 ```
-### Test unitario
-Los tests unitarios aislan la lógica de negocio simulando dependencias externas, como los modelos de base de datos.
+Navigate to the project directory:
+```bash
+cd gym-management-api
+```
+
+Install dependencies: 
+```bash
+npm install
+```
+
+---
+
+### Environment Variables
+Create a .env file in the project root:
+
+```env
+JWT_SECRET=YOUR_SECRET_KEY  
+PORT=3000
+
+DB_HOST=localhost
+DB_PORT=3306
+DB_USER=YOUR_DATABASE_USER
+DB_PASSWORD=YOUR_DATABASE_PASSWORD
+DB_NAME=gimnasio
+
+USER_ADMIN_TEST =admin
+PASSWORD_ADMIN_TEST=1234
+
+USER_PROFESSOR_TEST =YOUR_PROFESSOR_TEST
+PASSWORD_PROFESSOR_TEST=YOUR_PASS_PROFESSOR_TEST 
+```
+Do not commit your .env file to the repository.
+
+---
+
+### Database Setup
+Create the MySQL database using the SQL script located at:
+
+```text
+database/gimnasio.sql
+```
+
+Make sure the database credentials in .env match your local MySQL configuration.
+
+---
+
+## Running the Project
+### Development
+
+```bash
+npm run dev
+```
+
+### Production
+
+```bash
+npm run start
+```
+The API will run on the port configured through the PORT environment variable.
+
+---
+
+## Testing
+The project contains both unit tests and integration tests.
+
+### Run all tests
+```bash
+npm test
+```
+
+### Run tests in verbose mode
+```bash
+npm test -- --runInBand --verbose
+```
+
+### Run a specific test
+```bash
+npm test authIntegration.test.js
+```
+
+---
+
+## Testing Strategy
+### Unit Tests
+Unit tests focus on business logic in the service layer.
+
+External dependencies are mocked to isolate the unit under test.
+
+For example:
+```text
+Service
+ ├── Mock Client Service
+ ├── Mock Membership Service
+ └── Mock Database Model
+```
+
+This allows business rules and error scenarios to be tested independently from the database.
+
+### Integration Tests
+Integration tests validate the complete request flow against the real MySQL database:
+
+HTTP Request
+     ↓
+Route
+     ↓
+Middleware
+     ↓
+Controller
+     ↓
+Service
+     ↓
+Model
+     ↓
+MySQL
+
+Supertest is used to make HTTP requests to the Express application, while Jest handles test execution and assertions.
+
+Test helpers are used to create and clean up test data when necessary.
+
+The integration test suite covers:
+
+- Authentication
+- Professors
+- Memberships
+- Clients
+- Enrollments
+- Attendance
+- Routines
+- Routine Lines
 
 ---
  
-## Manejo de errores
-Los errores esperados usan AppError.
+## Error Handling
+The application uses a custom AppError class for expected application errors.
 
-Ejemplos:
+Common HTTP status codes include:
+
 - 400 Bad Request
 - 401 Unauthorized
 - 403 Forbidden
@@ -229,10 +499,70 @@ Ejemplos:
 - 409 Conflict
 - 500 Internal Server Error
 
+Examples of business conflicts include:
+
+- Duplicate DNI
+- Duplicate username or email
+- Inactive client
+- Inactive membership
+- Overlapping enrollments
+- Attendance outside the membership's allowed schedule
 ---
 
-## Futuras implementaciones
-- Gestión de pases (Membresias)
-- Gestión de clientes
-- Gestión de inscripciones
-- Control de asistencias
+## Desing Decisions
+### Layered responsibilities
+Business logic is kept in the service layer instead of placing it directly in controllers or models.
+
+This makes the application easier to test and keeps each layer focused on a specific responsibility.
+
+### Database integrity
+The original MySQL schema was preserved rather than restructuring the database to fit the API.
+
+Application-level validation and business rules are implemented around the existing relational model.
+
+### Enrollment history
+
+Membership assignments are handled through enrollments rather than directly replacing the client's membership.
+
+This allows the system to preserve historical enrollment records and prevents overlapping enrollment periods for the same client.
+
+### Nested resources
+
+Resources that conceptually belong to another entity are exposed through nested endpoints.
+
+Examples:
+
+/api/clients/:id/enrollments
+/api/clients/:id/attendances
+/api/clients/:id/routines
+/api/routines/:id/lines
+
+This reflects the relationships represented in the database and makes the API resource hierarchy explicit.
+
+---
+
+## Project Status
+The project is currently completed.
+
+---
+
+## Future Improvements
+
+Although the core backend is complete, possible future improvements include:
+
+- API documentation with OpenAPI/Swagger
+- Automated CI pipeline with GitHub Actions
+- Production environment configuration
+- Docker containerization
+- Database migrations
+- Improved logging and monitoring
+- Automated test database isolation
+- Pagination and filtering for large collections
+
+---
+
+## Author
+Juan Calvó
+
+GitHub:
+https://github.com/JuanCalvo6
